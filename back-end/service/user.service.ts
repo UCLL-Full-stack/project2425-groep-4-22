@@ -1,24 +1,19 @@
-import { UserInput } from '../types/index';
+import userRepository from '../repository/user.db';
 import { User } from '../model/user';
-import { UserRepository } from '../repository/user.db';
+import { Role, UserInput } from '../types/index';
 
-export class UserService {
-    private userRepository: UserRepository;
+const getAllUsers = (): User[] => userRepository.getAllUsers();
 
-    constructor() {
-        this.userRepository = new UserRepository();
-    }
-
-    // Get all users
-    getAllUsers(): User[] {
-        return this.userRepository.getAllUsers();
-    }
-
-    // Get a user by ID
-    getUserById(userId: number): User | undefined {
-        return this.userRepository.getUserById(userId);
-    }
+const getUserById = (userId: number): User => {
+    const user = userRepository.getUserById({ userId });
+    if (!user) throw new Error(`User with id ${userId} does not exist.`);
+    return user;
+};
 
 
-}
+const addUser = (UserInput: UserInput) => {
+    const newUser = userRepository.addUser(UserInput);
+    return newUser;
+};
 
+export default { getAllUsers, getUserById, addUser };

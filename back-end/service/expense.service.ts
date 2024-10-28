@@ -1,27 +1,28 @@
-import { ExpenseCategory } from '../types/index';
-import { User } from '../model/user';
+import expenseRepository from '../repository/expense.db';
+import userRepository from '../repository/user.db';
 import { Expense } from '../model/expense';
-import { ExpenseRepository } from '../repository/expense.db';
+import { ExpenseInput } from '../types/index';
 
+const getAllExpenses = (): Expense[] => expenseRepository.getAllExpenses();
 
-class ExpenseService {
-    private expenseRepository: ExpenseRepository;
+const getExpenseById = (expenseId: number): Expense => {
+    const expense = expenseRepository.getExpenseById({ expenseId });
+    if (!expense) throw new Error(`Expense with id ${expenseId} does not exist.`);
+    return expense;
+};
 
-    constructor() {
-        this.expenseRepository = new ExpenseRepository();
+const addExpense = (expenseData: ExpenseInput): Expense => {
+    const user = userRepository.getUserById({ userId: expenseData.userId });
+    if (!user) {
+        throw new Error(`User with id ${expenseData.userId} does not exist.`);
     }
 
-    // Get all expenses
-    getAllExpenses(): Expense[] {
-        return this.expenseRepository.getAllExpenses();
-    }
+    return expenseRepository.addExpense({
+        category: expenseData.category,
+        amount: expenseData.amount,
+        date: expenseData.date,
+        userId: expenseData.userId,
+    });
+};
 
-    // Get an expense by ID
-    getExpenseById(expenseId: number): Expense | undefined {
-        return this.expenseRepository.getExpenseById(expenseId);
-    }
-
-
-}
-
-export const expenseService = new ExpenseService();
+export default { getAllExpenses, getExpenseById, addExpense };

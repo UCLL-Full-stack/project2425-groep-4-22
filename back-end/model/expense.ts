@@ -1,18 +1,46 @@
 import { ExpenseCategory } from '../types/index';
-import { User } from './user';
 
 export class Expense {
-    expenseId: number;
-    category: ExpenseCategory;
-    amount: number;
-    date: Date;
-    user: User;
+    private expenseId?: number;
+    private category: ExpenseCategory;
+    private amount: number;
+    private date: Date;
 
-    constructor(expenseId: number, category: ExpenseCategory, amount: number, date: Date, user: User) {
-        this.expenseId = expenseId;
-        this.category = category;
-        this.amount = amount;
-        this.date = date;
-        this.user = user;
+    constructor(expense: {
+        expenseId?: number;
+        category: ExpenseCategory;
+        amount: number;
+        date: Date;
+    }) {
+        this.expenseId = expense.expenseId;
+        this.category = expense.category;
+        this.amount = expense.amount;
+        this.date = expense.date;
+    }
+
+    // Getters
+    getExpenseId(): number | undefined {
+        return this.expenseId;
+    }
+
+    getCategory(): ExpenseCategory {
+        return this.category;
+    }
+
+    getAmount(): number {
+        return this.amount;
+    }
+
+    getDate(): Date {
+        return this.date;
+    }
+
+
+    equals(expense: Expense): boolean {
+        return (
+            this.category === expense.getCategory() &&
+            this.amount === expense.getAmount() &&
+            this.date.getTime() === expense.getDate().getTime()
+        );
     }
 }

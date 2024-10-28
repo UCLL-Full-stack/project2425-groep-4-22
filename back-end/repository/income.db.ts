@@ -1,34 +1,56 @@
-import { IncomeCategory } from '../types/index';
+import { IncomeCategory, IncomeInput } from '../types/index';
 import { User } from '../model/user';
 import { Income } from '../model/income';
-import { UserRepository } from './user.db';
+import userRepository from './user.db';
 
-class IncomeRepository {
-    private incomes: Income[] = [];
-    userRepository: UserRepository;
 
-    constructor() {
-        // Initialize with demo incomes
-        this.userRepository = new UserRepository();
+const incomes = [
+    new Income({
+        incomeId: 1,
+        category: 'Salary' as IncomeCategory,
+        amount: 5000,
+        date: new Date('2023-01-01')
+    }),
+    new Income({
+        incomeId: 2,
+        category: 'Investment' as IncomeCategory,
+        amount: 2000,
+        date: new Date('2023-02-01')
+    })
+];
 
-        // Get users from UserRepository
-        const users = this.userRepository.getAllUsers();
-        const user1 = users[0];
-        const user2 = users[1];
 
-        this.incomes.push(new Income(1, 'Salary', 5000, new Date('2023-01-01'), user1));
-        this.incomes.push(new Income(2, 'Investment', 2000, new Date('2023-02-01'), user2));
+const users = userRepository.getAllUsers();
+if (users[0]) users[0].addIncome(incomes[0]);
+if (users[1]) users[1].addIncome(incomes[1]);
+
+
+const getAllIncomes = (): Income[] => incomes;
+
+
+const getIncomeById = ({ incomeId }: { incomeId: number }): Income | null => {
+    try {
+        return incomes.find((income) => income.getIncomeId() === incomeId) || null;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
     }
+};
 
-    // Get all incomes
-    getAllIncomes(): Income[] {
-        return this.incomes;
-    }
 
-    // Get an income by ID
-    getIncomeById(incomeId: number): Income | undefined {
-        return this.incomes.find(income => income.incomeId === incomeId);
-    }
-}
+const addIncome = (incomeData: IncomeInput & { user: User }): Income => {
+    const newIncomeId = incomes.length + 1;
+    const newIncome = new Income({
+        incomeId: newIncomeId,
+        ...incomeData
+    });
+    incomes.push(newIncome);
+    incomeData.user.addIncome(newIncome);
+    return newIncome;
+};
 
-export { IncomeRepository };
+export default {
+    getAllIncomes,
+    getIncomeById,
+    addIncome,
+};

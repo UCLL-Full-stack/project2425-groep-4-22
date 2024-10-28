@@ -1,4 +1,4 @@
-// Enums for Role, IncomeCategory, and ExpenseCategory
+import { User } from "../model/user";
 
 export type Role = 'admin' | 'member' | 'user';
 
@@ -40,12 +40,13 @@ export type IncomeInput = {
     category: IncomeCategory;
     amount: number;
     date: Date;
-    user: UserInput;
+    userId: number;
 };
+
 
 export type ExpenseInput = {
     category: ExpenseCategory;
     amount: number;
     date: Date;
-    user: UserInput;
+    userId: number;
 };

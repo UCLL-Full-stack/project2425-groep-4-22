@@ -1,28 +1,27 @@
-import { IncomeCategory } from '../types/index';
-import { User } from '../model/user';
+import incomeRepository from '../repository/income.db';
+import userRepository from '../repository/user.db';
 import { Income } from '../model/income';
-import { IncomeRepository } from '../repository/income.db';
+import { IncomeInput } from '../types/index';
 
-class IncomeService {
-    private incomeRepository: IncomeRepository;
+const getAllIncomes = (): Income[] => incomeRepository.getAllIncomes();
 
-    constructor() {
-        this.incomeRepository = new IncomeRepository();
+const getIncomeById = (incomeId: number): Income => {
+    const income = incomeRepository.getIncomeById({ incomeId });
+    if (!income) throw new Error(`Income with id ${incomeId} does not exist.`);
+    return income;
+};
+
+const addIncome = (incomeData: IncomeInput): Income => {
+    const user = userRepository.getUserById({ userId: incomeData.userId });
+    if (!user) {
+        throw new Error(`User with id ${incomeData.userId} does not exist.`);
     }
 
-    // Get all incomes
-    getAllIncomes(): Income[] {
-        return this.incomeRepository.getAllIncomes();
-    }
+    const newIncome = incomeRepository.addIncome({
+        ...incomeData,
+        user,
+    });
+    return newIncome;
+};
 
-    // Get an income by ID
-    getIncomeById(incomeId: number): Income | undefined {
-        return this.incomeRepository.getIncomeById(incomeId);
-    }
-
-
-
-
-}
-
-export const incomeService = new IncomeService();
+export default { getAllIncomes, getIncomeById, addIncome };

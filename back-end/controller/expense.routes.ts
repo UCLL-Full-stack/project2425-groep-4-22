@@ -1,75 +1,30 @@
-/**
- * @swagger
- *  components:
- *     securitySchemes:
- *       bearerAuth:
- *         type: http
- *         scheme: bearer
- *         bearerFormat: JWT
- *     schemas:
- *       Expense:
- *         type: object
- *         properties:
- *           expenseId:
- *             type: integer
- *             description: The ID of the expense
- *           category:
- *             type: string
- *             description: The category of the expense
- *           amount:
- *             type: number
- *             description: The amount of the expense
- *           date:
- *             type: string
- *             format: date
- *             description: The date of the expense
- *           user:
- *             $ref: '#/components/schemas/User'
- *       ExpenseInput:
- *         type: object
- *         properties:
- *           category:
- *             type: string
- *             description: The category of the expense
- *           amount:
- *             type: number
- *             description: The amount of the expense
- *           date:
- *             type: string
- *             format: date
- *             description: The date of the expense
- *           user:
- *             $ref: '#/components/schemas/UserInput'
- */
-
 import express, { NextFunction, Request, Response } from 'express';
-import { expenseService } from '../service/expense.service';
-import { ExpenseCategory } from '../types/index';
-import { User } from '../model/user';
+import expenseService from '../service/expense.service';
+import { ExpenseInput } from '../types/index';
 
 export const expenseRouter = express.Router();
 
 /**
  * @swagger
  * /expenses:
- *  get:
- *    summary: Get all expenses
- *    responses:
+ *   get:
+ *     summary: Get all expenses
+ *     responses:
  *       200:
- *          description: All expenses were successfully collected
- *          content:
- *            application/json:
- *              schema:
- *                type: array
- *                items:
- *                  $ref: '#/components/schemas/Expense'
+ *         description: All expenses were successfully retrieved
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Expense'
  *       500:
- *          description: Internal server error
+ *         description: Internal server error
  */
 expenseRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const expenses = expenseService.getAllExpenses();
-        res.status(200).json(await expenses);
+        const expenses = await expenseService.getAllExpenses();
+        res.status(200).json(expenses);
     } catch (error) {
         next(error);
     }
@@ -78,33 +33,33 @@ expenseRouter.get('/', async (req: Request, res: Response, next: NextFunction) =
 /**
  * @swagger
  * /expenses/{id}:
- *  get:
- *    summary: Get an expense by ID
- *    parameters:
- *      - in: path
- *        name: id
- *        schema:
- *          type: integer
- *        required: true
- *        description: Numeric ID of the expense to get
- *    responses:
+ *   get:
+ *     summary: Get an expense by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Numeric ID of the expense to get
+ *     responses:
  *       200:
- *          description: Expense was successfully retrieved
- *          content:
- *            application/json:
- *              schema:
- *                $ref: '#/components/schemas/Expense'
+ *         description: Expense was successfully retrieved
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Expense'
  *       404:
- *          description: Expense not found
+ *         description: Expense not found
  *       500:
- *          description: Internal server error
+ *         description: Internal server error
  */
 expenseRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const expenseId = parseInt(req.params.id, 10);
-        const expense = expenseService.getExpenseById(expenseId);
+        const expense = await expenseService.getExpenseById(expenseId);
         if (expense) {
-            res.status(200).json(await expense);
+            res.status(200).json(expense);
         } else {
             res.status(404).json({ message: 'Expense not found' });
         }
@@ -113,3 +68,42 @@ expenseRouter.get('/:id', async (req: Request, res: Response, next: NextFunction
     }
 });
 
+/**
+ * @swagger
+ * /expenses:
+ *   post:
+ *     summary: Add a new expense
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ExpenseInput'
+ *     responses:
+ *       201:
+ *         description: Expense was successfully added
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Expense'
+ *       400:
+ *         description: Invalid request data
+ *       500:
+ *         description: Internal server error
+ */
+expenseRouter.post('/add', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const expenseData: ExpenseInput = req.body;
+
+        if (!expenseData.userId) {
+            return res.status(400).json({ message: 'User ID is required to add an expense.' });
+        }
+
+        const newExpense = await expenseService.addExpense(expenseData);
+        res.status(201).json(newExpense);
+    } catch (error) {
+        next(error);
+    }
+});
+
+export default expenseRouter;
