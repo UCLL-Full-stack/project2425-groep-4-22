@@ -10,6 +10,10 @@ const Header: React.FC = () => {
             <Link href="/users" legacyBehavior>
               <a>Users</a>
             </Link>
+            
+            <Link href="/expenses" legacyBehavior>
+              <a>Expenses</a>
+            </Link>
           </li>
         </ul>
       </nav>
