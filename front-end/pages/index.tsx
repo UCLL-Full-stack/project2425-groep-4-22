@@ -1,10 +1,10 @@
 import React from 'react';
+import Header from '../components/header';
 
 const HomePage = () => {
     return (
         <div>
-            <h1>Welcome to the Home Page</h1>
-            <p>This is the default page of the Next.js application.</p>
+            <Header />
         </div>
     );
 };
