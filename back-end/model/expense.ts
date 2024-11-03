@@ -12,6 +12,18 @@ export class Expense {
         amount: number;
         date: Date;
     }) {
+        if (!expense.category) {
+            throw new Error('Expense category is required.');
+        }
+
+        if (expense.amount <= 0) {
+            throw new Error('Expense amount must be a positive number.');
+        }
+
+        if (isNaN(expense.date.getTime())) {
+            throw new Error('Invalid date.');
+        }
+
         this.expenseId = expense.expenseId;
         this.category = expense.category;
         this.amount = expense.amount;
@@ -34,7 +46,6 @@ export class Expense {
     getDate(): Date {
         return this.date;
     }
-
 
     equals(expense: Expense): boolean {
         return (

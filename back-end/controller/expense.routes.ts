@@ -95,9 +95,7 @@ expenseRouter.post('/add', async (req: Request, res: Response, next: NextFunctio
     try {
         const expenseData: ExpenseInput = req.body;
 
-        if (!expenseData.userId) {
-            return res.status(400).json({ message: 'User ID is required to add an expense.' });
-        }
+
 
         const newExpense = await expenseService.addExpense(expenseData);
         res.status(201).json(newExpense);

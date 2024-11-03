@@ -20,6 +20,34 @@ export class User {
         password: string;
         role: Role;
     }) {
+        if (!user.firstName) {
+            throw new Error('First name is required.');
+        }
+
+        if (!user.lastName) {
+            throw new Error('Last name is required.');
+        }
+
+        if (!user.email) {
+            throw new Error('Email is required.');
+        }
+
+        if (!this.isValidEmail(user.email)) {
+            throw new Error('Invalid email format.');
+        }
+
+        if (!user.password) {
+            throw new Error('Password is required.');
+        }
+
+        if (user.password.length < 8) {
+            throw new Error('Password must be at least 8 characters long.');
+        }
+
+        if (!user.role) {
+            throw new Error('Role is required.');
+        }
+
         this.userId = user.userId;
         this.firstName = user.firstName;
         this.lastName = user.lastName;
@@ -30,7 +58,7 @@ export class User {
         this.expenses = [];
     }
 
-
+    // Getters
     getUserId(): number | undefined {
         return this.userId;
     }
@@ -63,22 +91,28 @@ export class User {
         return this.expenses;
     }
 
-
+    // Add income
     addIncome(income: Income): void {
         this.incomes.push(income);
     }
 
-
+    // Add expense
     addExpense(expense: Expense): void {
         this.expenses.push(expense);
     }
 
-
+    // Equals method to compare users
     equals(user: User): boolean {
         return (
             this.email === user.getEmail() &&
             this.firstName === user.getFirstName() &&
             this.lastName === user.getLastName()
         );
+    }
+
+    // Helper method to validate email format
+    private isValidEmail(email: string): boolean {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
     }
 }

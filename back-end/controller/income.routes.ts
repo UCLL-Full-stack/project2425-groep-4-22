@@ -95,9 +95,7 @@ incomeRouter.post('/add', async (req: Request, res: Response, next: NextFunction
     try {
         const incomeData: IncomeInput = req.body;
 
-        if (!incomeData.userId) {
-            return res.status(400).json({ message: 'User ID is required to add income.' });
-        }
+
 
         const newIncome = await incomeService.addIncome(incomeData);
         res.status(201).json(newIncome);

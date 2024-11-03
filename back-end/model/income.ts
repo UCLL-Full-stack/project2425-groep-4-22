@@ -12,6 +12,18 @@ export class Income {
         amount: number;
         date: Date;
     }) {
+        if (!income.category) {
+            throw new Error('Income category is required.');
+        }
+
+        if (income.amount <= 0) {
+            throw new Error('Income amount must be a positive number.');
+        }
+
+        if (isNaN(income.date.getTime())) {
+            throw new Error('Invalid date.');
+        }
+
         this.incomeId = income.incomeId;
         this.category = income.category;
         this.amount = income.amount;
