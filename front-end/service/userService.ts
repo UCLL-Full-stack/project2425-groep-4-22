@@ -1,3 +1,5 @@
+import { User } from "types";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const getAllUsers = async () => {
@@ -16,4 +18,18 @@ const getUserById = async (id: string) => {
     return response.json();
 };
 
-export default { getAllUsers, getUserById };
+const addUser = async (user: User) => {
+    const response = await fetch(`${API_URL}/users/add`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+    });
+    if (!response.ok) {
+        throw new Error('Failed to add user');
+    }
+    return response.json();
+};
+
+export default { getAllUsers, getUserById, addUser };

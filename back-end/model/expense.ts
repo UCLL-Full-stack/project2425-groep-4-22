@@ -20,9 +20,10 @@ export class Expense {
             throw new Error('Expense amount must be a positive number.');
         }
 
-        if (isNaN(expense.date.getTime())) {
-            throw new Error('Invalid date.');
+        if (!expense.date) {
+            throw new Error('Expense date is required.');
         }
+
 
         this.expenseId = expense.expenseId;
         this.category = expense.category;

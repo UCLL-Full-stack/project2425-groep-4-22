@@ -19,6 +19,7 @@ export interface Income {
   incomeId?: number;
   category: IncomeCategory;
   amount: number;
+  userId: number;
   date: Date;
 }
 
@@ -26,5 +27,6 @@ export interface Expense {
   expenseId?: number;
   category: ExpenseCategory;
   amount: number;
+  userId: number;
   date: Date;
 }
