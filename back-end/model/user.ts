@@ -1,6 +1,8 @@
-import { Role } from '../types/index';
+
 import { Income } from './income';
 import { Expense } from './expense';
+import { User as UserPrisma, Income as IncomePrisma, Expense as ExpensePrisma } from '@prisma/client';
+
 
 export class User {
     private userId?: number;
@@ -8,7 +10,7 @@ export class User {
     private lastName: string;
     private email: string;
     private password: string;
-    private role: Role;
+    private role: number;
     private incomes: Income[];
     private expenses: Expense[];
 
@@ -18,7 +20,7 @@ export class User {
         lastName: string;
         email: string;
         password: string;
-        role: Role;
+        role: number;
     }) {
         if (!user.firstName) {
             throw new Error('First name is required.');
@@ -79,7 +81,7 @@ export class User {
         return this.password;
     }
 
-    getRole(): Role {
+    getRole(): number {
         return this.role;
     }
 
@@ -99,6 +101,30 @@ export class User {
     // Add expense
     addExpense(expense: Expense): void {
         this.expenses.push(expense);
+    }
+
+    // Mappers
+    static from({
+        user_id,
+        firstname,
+        lastname,
+        email,
+        password,
+        roleId,
+        incomes,
+        expenses,
+    }: UserPrisma & {
+        incomes: IncomePrisma[];
+        expenses: ExpensePrisma[];
+    }) {
+        return new User({
+            userId: user_id,
+            firstName: firstname,
+            lastName: lastname,
+            email,
+            password,
+            role: roleId ?? 2,
+        });
     }
 
     // Equals method to compare users

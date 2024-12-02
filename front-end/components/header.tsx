@@ -3,15 +3,17 @@ import Link from 'next/link';
 
 const Header: React.FC = () => {
   return (
-    <header className="header">
+    <header className="bg-gray-800 p-4">
       <nav>
-        <ul>
+        <ul className="flex space-x-4">
           <li>
             <Link href="/users" legacyBehavior>
-              <a>Users</a>
+              <a className="text-white hover:text-gray-400">Users</a>
             </Link>
+          </li>
+          <li>
             <Link href="/expenses" legacyBehavior>
-              <a>Expenses</a>
+              <a className="text-white hover:text-gray-400">Expenses</a>
             </Link>
           </li>
         </ul>

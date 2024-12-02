@@ -2,12 +2,11 @@ import expenseRepository from '../repository/expense.db';
 import userRepository from '../repository/user.db';
 import { Expense } from '../model/expense';
 import { ExpenseInput } from '../types/index';
+import expenseDb from '../repository/expense.db';
 
-const getAllExpenses = async (): Promise<Expense[]> => {
-    return await expenseRepository.getAllExpenses();
-};
+const getAllExpenses = async (): Promise<Expense[]> => expenseDb.getAllExpenses();
 
-const getExpenseById = async (expenseId: number): Promise<Expense> => {
+/* const getExpenseById = async (expenseId: number): Promise<Expense> => {
     const expense = await expenseRepository.getExpenseById({ expenseId });
     if (!expense) throw new Error(`Expense with id ${expenseId} does not exist.`);
     return expense;
@@ -25,6 +24,6 @@ const addExpense = async (expenseData: ExpenseInput): Promise<Expense> => {
         date: expenseData.date,
         userId: expenseData.userId,
     });
-};
+}; */
 
-export default { getAllExpenses, getExpenseById, addExpense };
+export default { getAllExpenses,/*  getExpenseById, addExpense */ };

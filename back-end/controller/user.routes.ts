@@ -131,7 +131,9 @@ userRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
  *       500:
  *         description: Internal server error
  */
-userRouter.get('/:userId', async (req: Request, res: Response, next: NextFunction) => {
+
+
+/* userRouter.get('/:userId', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = parseInt(req.params.userId, 10);
         const user = await userService.getUserById(userId);
@@ -143,7 +145,7 @@ userRouter.get('/:userId', async (req: Request, res: Response, next: NextFunctio
     } catch (error) {
         next(error);
     }
-});
+}); */
 
 /**
  * @swagger
@@ -162,7 +164,9 @@ userRouter.get('/:userId', async (req: Request, res: Response, next: NextFunctio
  *       500:
  *         description: Internal server error
  */
-userRouter.post('/add', async (req: Request, res: Response, next: NextFunction) => {
+
+
+/* userRouter.post('/add', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userInput: UserInput = req.body;
         await userService.addUser(userInput);
@@ -170,4 +174,4 @@ userRouter.post('/add', async (req: Request, res: Response, next: NextFunction) 
     } catch (error) {
         next(error);
     }
-});
+}); */

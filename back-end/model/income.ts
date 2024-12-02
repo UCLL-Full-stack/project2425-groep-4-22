@@ -1,4 +1,5 @@
 import { IncomeCategory } from '../types/index';
+import { Income as IncomePrisma, IncomeCategory as IncomeCategoryPrisma } from '@prisma/client';
 
 export class Income {
     private incomeId?: number;
@@ -45,6 +46,21 @@ export class Income {
 
     getDate(): Date {
         return this.date;
+    }
+
+    // Mappers
+    static from({
+        income_id,
+        category,
+        amount,
+        date,
+    }: IncomePrisma & { category: IncomeCategoryPrisma }) {
+        return new Income({
+            incomeId: income_id,
+            category: category.name as IncomeCategory,
+            amount,
+            date,
+        });
     }
 
     // Equals method to compare incomes

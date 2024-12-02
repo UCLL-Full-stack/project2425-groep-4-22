@@ -33,7 +33,7 @@ export type UserInput = {
     lastName: string;
     email: string;
     password: string;
-    role: Role;
+    role: number;
 };
 
 export type IncomeInput = {

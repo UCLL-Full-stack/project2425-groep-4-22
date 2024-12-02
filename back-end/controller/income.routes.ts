@@ -54,7 +54,9 @@ incomeRouter.get('/', async (req: Request, res: Response, next: NextFunction) =>
  *       500:
  *         description: Internal server error
  */
-incomeRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
+
+
+/* incomeRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const incomeId = parseInt(req.params.id, 10);
         const income = await incomeService.getIncomeById(incomeId);
@@ -66,7 +68,7 @@ incomeRouter.get('/:id', async (req: Request, res: Response, next: NextFunction)
     } catch (error) {
         next(error);
     }
-});
+}); */
 
 /**
  * @swagger
@@ -91,7 +93,9 @@ incomeRouter.get('/:id', async (req: Request, res: Response, next: NextFunction)
  *       500:
  *         description: Internal server error
  */
-incomeRouter.post('/add', async (req: Request, res: Response, next: NextFunction) => {
+
+
+/* incomeRouter.post('/add', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const incomeData: IncomeInput = req.body;
 
@@ -102,6 +106,6 @@ incomeRouter.post('/add', async (req: Request, res: Response, next: NextFunction
     } catch (error) {
         next(error);
     }
-});
+}); */
 
 export default incomeRouter;

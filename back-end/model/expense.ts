@@ -1,4 +1,5 @@
 import { ExpenseCategory } from '../types/index';
+import { Expense as ExpensePrisma, ExpenseCategory as ExpenseCategoryPrisma } from '@prisma/client';
 
 export class Expense {
     private expenseId?: number;
@@ -20,10 +21,9 @@ export class Expense {
             throw new Error('Expense amount must be a positive number.');
         }
 
-        if (!expense.date) {
-            throw new Error('Expense date is required.');
+        if (isNaN(expense.date.getTime())) {
+            throw new Error('Invalid date.');
         }
-
 
         this.expenseId = expense.expenseId;
         this.category = expense.category;
@@ -48,6 +48,22 @@ export class Expense {
         return this.date;
     }
 
+    // Mappers
+    static from({
+        expense_id,
+        category,
+        amount,
+        date,
+    }: ExpensePrisma & { category: ExpenseCategoryPrisma }) {
+        return new Expense({
+            expenseId: expense_id,
+            category: category.name as ExpenseCategory,
+            amount,
+            date,
+        });
+    }
+
+    // Equals method to compare expenses
     equals(expense: Expense): boolean {
         return (
             this.category === expense.getCategory() &&

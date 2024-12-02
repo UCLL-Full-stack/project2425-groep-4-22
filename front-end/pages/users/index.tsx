@@ -29,9 +29,9 @@ const Users: React.FC = () => {
       </Head>
       <Header />
       <main className="d-flex flex-column justify-content-center align-items-center">
-        <h1>Users</h1>
+        
         <section>
-          <h2>Users overview</h2>
+          
           <UsersOverviewTable users={users} selectUser={setSelectedUser} />
         </section>
       </main>

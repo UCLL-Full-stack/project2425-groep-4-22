@@ -3,9 +3,10 @@ import userRepository from '../repository/user.db';
 import { Income } from '../model/income';
 import { IncomeInput } from '../types/index';
 
-const getAllIncomes = (): Income[] => incomeRepository.getAllIncomes();
+const getAllIncomes = async (): Promise<Income[]> => incomeRepository.getAllIncomes();
 
-const getIncomeById = (incomeId: number): Income => {
+
+/* const getIncomeById = (incomeId: number): Income => {
     const income = incomeRepository.getIncomeById({ incomeId });
     if (!income) throw new Error(`Income with id ${incomeId} does not exist.`);
     return income;
@@ -23,5 +24,5 @@ const addIncome = (incomeData: IncomeInput): Income => {
     });
     return newIncome;
 };
-
-export default { getAllIncomes, getIncomeById, addIncome };
+ */
+export default { getAllIncomes,/*  getIncomeById, addIncome */ };

@@ -54,7 +54,9 @@ expenseRouter.get('/', async (req: Request, res: Response, next: NextFunction) =
  *       500:
  *         description: Internal server error
  */
-expenseRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
+
+
+/* expenseRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const expenseId = parseInt(req.params.id, 10);
         const expense = await expenseService.getExpenseById(expenseId);
@@ -66,7 +68,7 @@ expenseRouter.get('/:id', async (req: Request, res: Response, next: NextFunction
     } catch (error) {
         next(error);
     }
-});
+}); */
 
 /**
  * @swagger
@@ -91,7 +93,8 @@ expenseRouter.get('/:id', async (req: Request, res: Response, next: NextFunction
  *       500:
  *         description: Internal server error
  */
-expenseRouter.post('/add', async (req: Request, res: Response, next: NextFunction) => {
+
+/* expenseRouter.post('/add', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const expenseData: ExpenseInput = req.body;
 
@@ -102,6 +105,6 @@ expenseRouter.post('/add', async (req: Request, res: Response, next: NextFunctio
     } catch (error) {
         next(error);
     }
-});
+}); */
 
 export default expenseRouter;
