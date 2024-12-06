@@ -54,7 +54,11 @@ export class Expense {
         category,
         amount,
         date,
-    }: ExpensePrisma & { category: ExpenseCategoryPrisma }) {
+    }: ExpensePrisma & { category: ExpenseCategoryPrisma }): Expense {
+        if (!category) {
+            throw new Error('Expense category is required.');
+        }
+
         return new Expense({
             expenseId: expense_id,
             category: category.name as ExpenseCategory,
@@ -62,6 +66,8 @@ export class Expense {
             date,
         });
     }
+
+
 
     // Equals method to compare expenses
     equals(expense: Expense): boolean {

@@ -15,7 +15,7 @@ model User {
   password   String
   incomes    Income[]
   expenses   Expense[]
-  role       Role?            @relation(fields: [roleId], references: [id])
+  role       Role?           @relation(fields: [roleId], references: [id])
   roleId     Int?
 }
 

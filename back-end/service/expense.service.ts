@@ -6,24 +6,31 @@ import expenseDb from '../repository/expense.db';
 
 const getAllExpenses = async (): Promise<Expense[]> => expenseDb.getAllExpenses();
 
-/* const getExpenseById = async (expenseId: number): Promise<Expense> => {
+const getExpenseById = async (expenseId: number): Promise<Expense> => {
     const expense = await expenseRepository.getExpenseById({ expenseId });
     if (!expense) throw new Error(`Expense with id ${expenseId} does not exist.`);
     return expense;
 };
 
 const addExpense = async (expenseData: ExpenseInput): Promise<Expense> => {
-    const user = await userRepository.getUserById({ userId: expenseData.userId });
-    if (!user) {
-        throw new Error(`User with id ${expenseData.userId} does not exist.`);
+    try {
+        const user = await userRepository.getUserById({ userId: expenseData.userId });
+        if (!user) {
+            throw new Error(`User with id ${expenseData.userId} does not exist.`);
+        }
+
+        const newExpense = await expenseRepository.addExpense({
+            category: expenseData.category,
+            amount: expenseData.amount,
+            date: expenseData.date,
+            userId: expenseData.userId,
+        });
+
+        return newExpense;
+    } catch (error) {
+        console.error('Error adding expense:', error);
+        throw new Error('Internal server error. Please try again later.');
     }
+};
 
-    return await expenseRepository.addExpense({
-        category: expenseData.category,
-        amount: expenseData.amount,
-        date: expenseData.date,
-        userId: expenseData.userId,
-    });
-}; */
-
-export default { getAllExpenses,/*  getExpenseById, addExpense */ };
+export default { getAllExpenses, getExpenseById, addExpense };

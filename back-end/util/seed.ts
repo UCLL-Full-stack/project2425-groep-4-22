@@ -1,90 +1,149 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 async function main() {
-    // Add categories
-    const foodCategory = await prisma.category.create({
-        data: {
-            name: 'Food',
+    // Seed Roles
+    const adminRole = await prisma.role.upsert({
+        where: { name: "Admin" },
+        update: {},
+        create: {
+            name: "Admin",
         },
     });
 
-    const salaryCategory = await prisma.category.create({
-        data: {
-            name: 'Salary',
+    const userRole = await prisma.role.upsert({
+        where: { name: "User" },
+        update: {},
+        create: {
+            name: "User",
         },
     });
 
-    const utilitiesCategory = await prisma.category.create({
-        data: {
-            name: 'Utilities',
+    // Seed Users
+    const user1 = await prisma.user.upsert({
+        where: { email: "johndoe@example.com" },
+        update: {},
+        create: {
+            firstname: "John",
+            lastname: "Doe",
+            email: "johndoe@example.com",
+            password: "password123", // Consider hashing passwords in production
+            role: {
+                connect: { id: adminRole.id },
+            },
         },
     });
 
-    // Add users
-    const user1 = await prisma.user.create({
-        data: {
-            firstname: 'John',
-            lastname: 'Doe',
-            email: 'john.doe@example.com',
-            password: 'password123',
+    const user2 = await prisma.user.upsert({
+        where: { email: "janedoe@example.com" },
+        update: {},
+        create: {
+            firstname: "Jane",
+            lastname: "Doe",
+            email: "janedoe@example.com",
+            password: "password123", // Consider hashing passwords in production
+            role: {
+                connect: { id: userRole.id },
+            },
         },
     });
 
-    const user2 = await prisma.user.create({
-        data: {
-            firstname: 'Jane',
-            lastname: 'Smith',
-            email: 'jane.smith@example.com',
-            password: 'securepassword',
+    // Seed Income Categories
+    const salaryCategory = await prisma.incomeCategory.upsert({
+        where: { name: "Salary" },
+        update: {},
+        create: {
+            name: "Salary",
         },
     });
 
-    // Add income
+    const freelanceCategory = await prisma.incomeCategory.upsert({
+        where: { name: "Freelance" },
+        update: {},
+        create: {
+            name: "Freelance",
+        },
+    });
+
+    // Seed Expense Categories
+    const groceriesCategory = await prisma.expenseCategory.upsert({
+        where: { name: "Groceries" },
+        update: {},
+        create: {
+            name: "Groceries",
+        },
+    });
+
+    const entertainmentCategory = await prisma.expenseCategory.upsert({
+        where: { name: "Entertainment" },
+        update: {},
+        create: {
+            name: "Entertainment",
+        },
+    });
+
+    // Seed Incomes
     await prisma.income.create({
         data: {
-            categoryName: salaryCategory.name,
             amount: 5000.0,
-            date: new Date('2024-01-01'),
-            userId: user1.user_id,
+            date: new Date(),
+            user: {
+                connect: { user_id: user1.user_id },
+            },
+            category: {
+                connect: { id: salaryCategory.id },
+            },
         },
     });
 
     await prisma.income.create({
         data: {
-            categoryName: salaryCategory.name,
-            amount: 4500.0,
-            date: new Date('2024-01-15'),
-            userId: user2.user_id,
+            amount: 2000.0,
+            date: new Date(),
+            user: {
+                connect: { user_id: user2.user_id },
+            },
+            category: {
+                connect: { id: freelanceCategory.id },
+            },
         },
     });
 
-    // Add expenses
+    // Seed Expenses
     await prisma.expense.create({
         data: {
-            categoryName: foodCategory.name,
+            amount: 300.0,
+            date: new Date(),
+            user: {
+                connect: { user_id: user1.user_id },
+            },
+            category: {
+                connect: { id: groceriesCategory.id },
+            },
+        },
+    });
+
+    await prisma.expense.create({
+        data: {
             amount: 150.0,
-            date: new Date('2024-01-02'),
-            userId: user1.user_id,
+            date: new Date(),
+            user: {
+                connect: { user_id: user2.user_id },
+            },
+            category: {
+                connect: { id: entertainmentCategory.id },
+            },
         },
     });
-
-    await prisma.expense.create({
-        data: {
-            categoryName: utilitiesCategory.name,
-            amount: 200.0,
-            date: new Date('2024-01-03'),
-            userId: user2.user_id,
-        },
-    });
-
-    console.log('Database has been seeded!');
 }
 
 main()
+    .then(() => {
+        console.log("Seeding finished.");
+    })
     .catch((e) => {
-        console.error(e);
+        console.error("Seeding error: ", e);
         process.exit(1);
     })
     .finally(async () => {
