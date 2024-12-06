@@ -1,6 +1,8 @@
 import { Income } from '../model/income';
-import database from './database';
-
+import { IncomeCategory, IncomeInput } from '../types/index';
+import { User } from '../model/user';
+import database from './database.db';
+import userRepository from './user.db';
 
 const getAllIncomes = async (): Promise<Income[]> => {
     try {
@@ -22,30 +24,62 @@ const getAllIncomes = async (): Promise<Income[]> => {
     }
 };
 
-/* 
-const getIncomeById = ({ incomeId }: { incomeId: number }): Income | null => {
+const getIncomeById = async ({ incomeId }: { incomeId: number }): Promise<Income | null> => {
     try {
-        return incomes.find((income) => income.getIncomeId() === incomeId) || null;
+        const incomePrisma = await database.income.findUnique({
+            where: { income_id: incomeId },
+            include: {
+                user: true,
+                category: true
+            }
+        });
+        if (!incomePrisma) return null;
+        return Income.from({
+            ...incomePrisma,
+            category: incomePrisma.category as { id: number; name: string }
+        });
     } catch (error) {
-        console.error(error);
+        console.error('Database error. See server log for details.', error);
         throw new Error('Database error. See server log for details.');
     }
 };
 
+const addIncome = async (incomeData: IncomeInput & { userId: number }): Promise<Income> => {
+    try {
+        const user = await userRepository.getUserById({ userId: incomeData.userId });
+        if (!user) {
+            throw new Error(`User with id ${incomeData.userId} not found`);
+        }
 
-const addIncome = (incomeData: IncomeInput & { user: User }): Income => {
-    const newIncomeId = incomes.length + 1;
-    const newIncome = new Income({
-        incomeId: newIncomeId,
-        ...incomeData
-    });
-    incomes.push(newIncome);
-    incomeData.user.addIncome(newIncome);
-    return newIncome;
-}; */
+        const newIncomePrisma = await database.income.create({
+            data: {
+                categoryId: parseInt(incomeData.category as unknown as string),
+                amount: incomeData.amount,
+                date: incomeData.date,
+                userId: incomeData.userId
+            },
+            include: {
+                user: true,
+                category: true
+            }
+        });
+
+        const newIncome = Income.from({
+            ...newIncomePrisma,
+            category: newIncomePrisma.category as { id: number; name: string }
+        });
+
+        user.addIncome(newIncome);
+
+        return newIncome;
+    } catch (error) {
+        console.error('Database error. See server log for details.', error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
 
 export default {
     getAllIncomes,
-    /* getIncomeById,
-    addIncome, */
+    getIncomeById,
+    addIncome,
 };

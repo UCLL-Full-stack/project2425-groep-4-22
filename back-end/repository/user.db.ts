@@ -1,7 +1,6 @@
 import { User } from '../model/user';
-
-
-import database from './database';
+import { UserInput } from '../types/index';
+import database from './database.db';
 
 const getAllUsers = async (): Promise<User[]> => {
     try {
@@ -24,30 +23,61 @@ const getAllUsers = async (): Promise<User[]> => {
     }
 };
 
-
-
-/* const getUserById = ({ userId }: { userId: number }): User | null => {
+const getUserById = async ({ userId }: { userId: number }): Promise<User | null> => {
     try {
-        return users.find((user) => user.getUserId() === userId) || null;
+        const userPrisma = await database.user.findUnique({
+            where: { user_id: userId },
+            include: {
+                incomes: {
+                    include: { category: true }, // Include income categories
+                },
+                expenses: {
+                    include: { category: true }, // Include expense categories
+                },
+            },
+        });
+        if (!userPrisma) return null;
+        return User.from({
+            ...userPrisma,
+            incomes: userPrisma.incomes || [],
+            expenses: userPrisma.expenses || []
+        });
     } catch (error) {
-        console.error(error);
+        console.error('Database error. See server log for details.', error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
+const addUser = async (userData: UserInput): Promise<User> => {
+    try {
+        const newUserPrisma = await database.user.create({
+            data: {
+                firstname: userData.firstname,
+                lastname: userData.lastname,
+                email: userData.email,
+                password: userData.password,
+                role: {
+                    connect: {
+                        id: userData.roleId // Ensure this is an Int or fetch the correct ID beforehand
+                    }
+                }
+            }
+        });
+
+        return User.from({
+            ...newUserPrisma,
+            incomes: [],
+            expenses: []
+        });
+    } catch (error) {
+
         throw new Error('Database error. See server log for details.');
     }
 };
 
 
-const addUser = (userData: UserInput): User => {
-    const newUserId = users.length + 1;
-    const newUser = new User({
-        userId: newUserId,
-        ...userData
-    });
-    users.push(newUser);
-    return newUser;
-};
- */
 export default {
     getAllUsers,
-    /* getUserById,
-    addUser, */
+    getUserById,
+    addUser,
 };

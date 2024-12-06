@@ -18,6 +18,8 @@ app.use(bodyParser.json());
 app.use('/users', userRouter);
 app.use('/incomes', incomeRouter);
 app.use('/expenses', expenseRouter);
+app.use('/categories/income', incomeRouter);
+app.use('/categories/expense', expenseRouter);
 
 app.get('/status', (req, res) => {
     res.json({ message: 'Back-end is running...' });

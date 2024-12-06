@@ -1,4 +1,7 @@
+import { Expense, Income } from "@prisma/client";
 import { User } from "../model/user";
+
+
 
 export type Role = 'admin' | 'member' | 'user';
 
@@ -29,11 +32,15 @@ export type ExpenseCategory =
 // Input types for creating new instances
 
 export type UserInput = {
-    firstName: string;
-    lastName: string;
+    user_id: number;
+    firstname: string;
+    lastname: string;
     email: string;
     password: string;
-    role: number;
+    incomes: Income[];
+    expenses: Expense[];
+    role?: Role;
+    roleId?: number;
 };
 
 export type IncomeInput = {
@@ -49,4 +56,14 @@ export type ExpenseInput = {
     amount: number;
     date: Date;
     userId: number;
+};
+
+export type ExpenseCategoryInput = {
+    name: ExpenseCategory;
+    expenses: Expense[];
+};
+
+export type IncomeCategoryInput = {
+    name: IncomeCategory;
+    incomes: Income[];
 };

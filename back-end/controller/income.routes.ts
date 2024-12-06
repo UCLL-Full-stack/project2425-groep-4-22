@@ -56,7 +56,7 @@ incomeRouter.get('/', async (req: Request, res: Response, next: NextFunction) =>
  */
 
 
-/* incomeRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
+incomeRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const incomeId = parseInt(req.params.id, 10);
         const income = await incomeService.getIncomeById(incomeId);
@@ -68,7 +68,7 @@ incomeRouter.get('/', async (req: Request, res: Response, next: NextFunction) =>
     } catch (error) {
         next(error);
     }
-}); */
+});
 
 /**
  * @swagger
@@ -95,7 +95,7 @@ incomeRouter.get('/', async (req: Request, res: Response, next: NextFunction) =>
  */
 
 
-/* incomeRouter.post('/add', async (req: Request, res: Response, next: NextFunction) => {
+incomeRouter.post('/add', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const incomeData: IncomeInput = req.body;
 
@@ -106,6 +106,6 @@ incomeRouter.get('/', async (req: Request, res: Response, next: NextFunction) =>
     } catch (error) {
         next(error);
     }
-}); */
+});
 
 export default incomeRouter;
