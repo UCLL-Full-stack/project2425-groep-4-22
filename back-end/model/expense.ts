@@ -50,14 +50,14 @@ export class Expense {
 
     // Mappers
     static from({
-        expense_id,
+        id,
         category,
         amount,
         date,
     }: ExpensePrisma & { category: ExpenseCategoryPrisma }) {
         return new Expense({
-            expenseId: expense_id,
-            category: category.name as ExpenseCategory,
+            expenseId: id,
+            category: category as unknown as ExpenseCategory,
             amount,
             date,
         });

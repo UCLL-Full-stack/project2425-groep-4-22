@@ -34,7 +34,7 @@ const getAllExpenses = async (): Promise<Expense[]> => {
 const getExpenseById = async ({ expenseId }: { expenseId: number }): Promise<Expense | null> => {
     try {
         const expensePrisma = await database.expense.findUnique({
-            where: { expense_id: expenseId },
+            where: { id: expenseId },
             include: {
                 user: true,
                 category: true

@@ -105,7 +105,7 @@ export class User {
 
     // Mappers
     static from({
-        user_id,
+        id,
         firstname,
         lastname,
         email,
@@ -118,7 +118,7 @@ export class User {
         expenses: ExpensePrisma[];
     }) {
         return new User({
-            userId: user_id,
+            userId: id,
             firstName: firstname,
             lastName: lastname,
             email,

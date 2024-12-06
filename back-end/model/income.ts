@@ -48,17 +48,20 @@ export class Income {
         return this.date;
     }
 
-    static from(prismaIncome: IncomePrisma & { category?: { id: number; name: string } | null }): Income {
+    // Mappers
+    static from({
+        id,
+        category,
+        amount,
+        date,
+    }: IncomePrisma & { category: IncomeCategoryPrisma }) {
         return new Income({
-            incomeId: prismaIncome.income_id,
-            category: prismaIncome.category
-                ? { id: prismaIncome.category.id, name: prismaIncome.category.name }
-                : { id: 0, name: 'Uncategorized' }, // Provide a default category
-            amount: prismaIncome.amount,
-            date: new Date(prismaIncome.date),
+            incomeId: id,
+            category: category as unknown as IncomeCategory,
+            amount,
+            date,
         });
     }
-
 
     // Equals method to compare incomes
     equals(income: Income): boolean {

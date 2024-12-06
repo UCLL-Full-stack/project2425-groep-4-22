@@ -27,7 +27,7 @@ const getAllIncomes = async (): Promise<Income[]> => {
 const getIncomeById = async ({ incomeId }: { incomeId: number }): Promise<Income | null> => {
     try {
         const incomePrisma = await database.income.findUnique({
-            where: { income_id: incomeId },
+            where: { id: incomeId },
             include: {
                 user: true,
                 category: true
