@@ -45,7 +45,7 @@ export type IncomeInput = {
 
 
 export type ExpenseInput = {
-    category: ExpenseCategory;
+    category: ExpenseCategory | string;
     amount: number;
     date: Date;
     userId: number;

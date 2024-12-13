@@ -1,15 +1,10 @@
-
 import { Expense } from '../model/expense';
-
 import database from './database';
 import { ExpenseCategory } from '../types';
 import userRepository from './user.db';
-import { ExpenseInput } from '../types/index';
-
 
 const getAllExpenses = async (): Promise<Expense[]> => {
     try {
-
         const ExpensePrisma = await database.expense.findMany({
             include: {
                 user: true,
@@ -22,14 +17,11 @@ const getAllExpenses = async (): Promise<Expense[]> => {
                 category: expensePrisma.category as { id: number; name: string }
             });
         });
-    }
-    catch (error) {
+    } catch (error) {
         console.error(error);
         throw new Error('Database error. See server log for details.');
     }
-
 };
-
 
 const getExpenseById = async ({ expenseId }: { expenseId: number }): Promise<Expense | null> => {
     try {
@@ -50,9 +42,6 @@ const getExpenseById = async ({ expenseId }: { expenseId: number }): Promise<Exp
         throw new Error('Database error. See server log for details.');
     }
 };
-
-
-
 
 const addExpense = async (expenseInput: {
     category: ExpenseCategory;
@@ -97,10 +86,50 @@ const addExpense = async (expenseInput: {
     }
 };
 
+const updateExpense = async (expenseId: number, updateData: {
+    category?: ExpenseCategory;
+    amount?: number;
+    date?: Date;
+}): Promise<Expense | null> => {
+    try {
+        const updatedExpensePrisma = await database.expense.update({
+            where: { expense_id: expenseId },
+            data: {
+                ...(updateData.category && { categoryId: parseInt(updateData.category as unknown as string) }),
+                ...(updateData.amount && { amount: updateData.amount }),
+                ...(updateData.date && { date: updateData.date })
+            },
+            include: {
+                user: true,
+                category: true
+            }
+        });
 
+        return Expense.from({
+            ...updatedExpensePrisma,
+            category: updatedExpensePrisma.category as { id: number; name: string }
+        });
+    } catch (error) {
+        console.error('Error updating expense:', error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
+const deleteExpense = async (expenseId: number): Promise<void> => {
+    try {
+        await database.expense.delete({
+            where: { expense_id: expenseId }
+        });
+    } catch (error) {
+        console.error('Error deleting expense:', error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
 
 export default {
     getAllExpenses,
     getExpenseById,
     addExpense,
+    updateExpense,
+    deleteExpense
 };

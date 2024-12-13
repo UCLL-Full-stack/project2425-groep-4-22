@@ -1,7 +1,7 @@
 import { ExpenseCategory as ExpenseCategoryPrisma } from '@prisma/client';
 
 export class ExpenseCategory {
-    private id?: number;
+    private id: number;
     private name: string;
 
     constructor({ id, name }: { id?: number; name: string }) {
@@ -9,12 +9,12 @@ export class ExpenseCategory {
             throw new Error('Category name is required.');
         }
 
-        this.id = id;
+        this.id = id || 0;
         this.name = name;
     }
 
     // Getters
-    getId(): number | undefined {
+    getId(): number {
         return this.id;
     }
 
