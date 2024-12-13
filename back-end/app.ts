@@ -1,15 +1,18 @@
-import * as dotenv from 'dotenv';
 import express from 'express';
-import cors from 'cors';
 import * as bodyParser from 'body-parser';
+import cors from 'cors';
+import dotenv from 'dotenv';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { userRouter } from './controller/user.routes';
 import { incomeRouter } from './controller/income.routes';
 import { expenseRouter } from './controller/expense.routes';
+import { incomecategorieRouter } from './controller/incomecategory.routes';
+import { expenseCategoryRouter } from './controller/expensecategory.routes';
+
+dotenv.config();
 
 const app = express();
-dotenv.config();
 const port = process.env.APP_PORT || 3000;
 
 app.use(cors());
@@ -18,25 +21,34 @@ app.use(bodyParser.json());
 app.use('/users', userRouter);
 app.use('/incomes', incomeRouter);
 app.use('/expenses', expenseRouter);
+app.use('/income-categorys', incomecategorieRouter);
+app.use('/expense-categorys', expenseCategoryRouter);
 
 app.get('/status', (req, res) => {
     res.json({ message: 'Back-end is running...' });
 });
 
-const swaggerOpts = {
-    definition: {
+// Swagger setup
+const swaggerOptions = {
+    swaggerDefinition: {
         openapi: '3.0.0',
         info: {
-            title: 'Money Manager API',
+            title: 'API Documentation',
             version: '1.0.0',
+            description: 'API Documentation for the application',
         },
+        servers: [
+            {
+                url: `http://localhost:${port}`,
+            },
+        ],
     },
-    apis: ['./controller/*.routes.ts'],
+    apis: ['./controller/*.ts'], // Path to the API docs
 };
 
-const swaggerSpec = swaggerJSDoc(swaggerOpts);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+const swaggerDocs = swaggerJSDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-app.listen(port || 3000, () => {
-    console.log(`Back-end is running on port ${port}.`);
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
