@@ -1,0 +1,2 @@
+fix getExpenseById so it doesnt need string for id
+implement user delete and update

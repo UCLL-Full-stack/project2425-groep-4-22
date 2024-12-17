@@ -95,9 +95,9 @@ const updateExpense = async (expenseId: number, updateData: {
         const updatedExpensePrisma = await database.expense.update({
             where: { expense_id: expenseId },
             data: {
-                ...(updateData.category && { categoryId: parseInt(updateData.category as unknown as string) }),
-                ...(updateData.amount && { amount: updateData.amount }),
-                ...(updateData.date && { date: updateData.date })
+                ...(updateData.category !== undefined && { categoryId: Number(updateData.category) }),
+                ...(updateData.amount !== undefined && { amount: updateData.amount }),
+                ...(updateData.date !== undefined && { date: updateData.date })
             },
             include: {
                 user: true,
@@ -114,6 +114,7 @@ const updateExpense = async (expenseId: number, updateData: {
         throw new Error('Database error. See server log for details.');
     }
 };
+
 
 const deleteExpense = async (expenseId: number): Promise<void> => {
     try {

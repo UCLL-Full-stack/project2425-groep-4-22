@@ -3,13 +3,13 @@ import { Expense as ExpensePrisma, ExpenseCategory as ExpenseCategoryPrisma } fr
 
 export class Expense {
     private expenseId?: number;
-    private category: ExpenseCategory;
+    private category: string | null;
     private amount: number;
     private date: Date;
 
     constructor(expense: {
         expenseId?: number;
-        category: ExpenseCategory;
+        category: string | null;
         amount: number;
         date: Date;
     }) {
@@ -36,7 +36,7 @@ export class Expense {
         return this.expenseId;
     }
 
-    getCategory(): ExpenseCategory {
+    getCategory(): string | null {
         return this.category;
     }
 

@@ -3,13 +3,13 @@ import { Income as IncomePrisma, IncomeCategory as IncomeCategoryPrisma } from '
 
 export class Income {
     private incomeId?: number;
-    private category: IncomeCategory;
+    private category: string | null;
     private amount: number;
     private date: Date;
 
     constructor(income: {
         incomeId?: number;
-        category: IncomeCategory;
+        category: string | null;
         amount: number;
         date: Date;
     }) {
@@ -36,7 +36,7 @@ export class Income {
         return this.incomeId;
     }
 
-    getCategory(): IncomeCategory {
+    getCategory(): string | null {
         return this.category;
     }
 

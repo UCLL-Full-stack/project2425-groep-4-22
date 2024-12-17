@@ -6,7 +6,7 @@ import { IncomeInput } from '../types/index';
 const getAllIncomes = async (): Promise<Income[]> => incomeRepository.getAllIncomes();
 
 const getIncomeById = async (incomeId: number): Promise<Income> => {
-    const income = await incomeRepository.getIncomeById({ incomeId });
+    const income = await incomeRepository.getIncomeById(incomeId);
     if (!income) throw new Error(`Income with id ${incomeId} does not exist.`);
     return income;
 };
@@ -23,4 +23,18 @@ const addIncome = async (incomeData: IncomeInput): Promise<Income> => {
     });
 };
 
-export default { getAllIncomes, getIncomeById, addIncome };
+const updateIncome = async (incomeId: number, updateData: Partial<IncomeInput>): Promise<Income> => {
+    const income = await incomeRepository.getIncomeById(incomeId);
+    if (!income) throw new Error(`Income with id ${incomeId} does not exist.`);
+    const updatedIncome = await incomeRepository.updateIncome(incomeId, updateData);
+    if (!updatedIncome) throw new Error(`Failed to update income with id ${incomeId}.`);
+    return updatedIncome;
+};
+
+const deleteIncome = async (incomeId: number): Promise<void> => {
+    const income = await incomeRepository.getIncomeById(incomeId);
+    if (!income) throw new Error(`Income with id ${incomeId} does not exist.`);
+    await incomeRepository.deleteIncome(incomeId);
+};
+
+export default { getAllIncomes, getIncomeById, addIncome, updateIncome, deleteIncome };

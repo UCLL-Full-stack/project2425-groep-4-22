@@ -134,7 +134,7 @@ expenseRouter.post('/add', async (req: Request, res: Response, next: NextFunctio
  *       500:
  *         description: Internal server error
  */
-expenseRouter.put('/:id', async (req: Request, res: Response, next: NextFunction) => {
+expenseRouter.put('/update/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const expenseId = parseInt(req.params.id, 10);
         const updateData: Partial<ExpenseInput> = req.body;
@@ -169,7 +169,7 @@ expenseRouter.put('/:id', async (req: Request, res: Response, next: NextFunction
  *       500:
  *         description: Internal server error
  */
-expenseRouter.delete('/:id', async (req: Request, res: Response, next: NextFunction) => {
+expenseRouter.delete('/delete/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const expenseId = parseInt(req.params.id, 10);
         await expenseService.deleteExpense(expenseId);

@@ -1,8 +1,12 @@
-
 import { Income } from './income';
 import { Expense } from './expense';
-import { User as UserPrisma, Income as IncomePrisma, Expense as ExpensePrisma } from '@prisma/client';
-
+import {
+    User as UserPrisma,
+    Income as IncomePrisma,
+    Expense as ExpensePrisma,
+    ExpenseCategory,
+    IncomeCategory,
+} from '@prisma/client';
 
 export class User {
     private userId?: number;
@@ -114,10 +118,10 @@ export class User {
         incomes,
         expenses,
     }: UserPrisma & {
-        incomes: IncomePrisma[];
-        expenses: ExpensePrisma[];
+        incomes: (IncomePrisma & { category?: { id: number; name: string } | null })[];
+        expenses: (ExpensePrisma & { category?: { id: number; name: string } | null })[];
     }) {
-        return new User({
+        const user = new User({
             userId: user_id,
             firstName: firstname,
             lastName: lastname,
@@ -125,7 +129,30 @@ export class User {
             password,
             role: roleId ?? 2,
         });
+
+        // Map expenses safely
+        user.expenses = expenses.map((expense) =>
+            new Expense({
+                expenseId: expense.expense_id,
+                category: expense.category?.name || null, // Handle null safely
+                amount: expense.amount,
+                date: new Date(expense.date),
+            })
+        );
+
+        // Map incomes safely
+        user.incomes = incomes.map((income) =>
+            new Income({
+                incomeId: income.income_id,
+                category: income.category?.name || null, // Handle null safely
+                amount: income.amount,
+                date: new Date(income.date),
+            })
+        );
+
+        return user;
     }
+
 
     // Equals method to compare users
     equals(user: User): boolean {
