@@ -23,7 +23,7 @@ const EditIncomeForm: React.FC<{ onClose: () => void; onIncomeUpdated: () => voi
                 const fetchedCategories = await incomeCategoryService.getAllIncomeCategories();
                 setCategories(fetchedCategories); // Assuming categories have { id, name }
             } catch (err) {
-                setError('Failed to fetch income categories.');
+                setError('');
             }
         };
 

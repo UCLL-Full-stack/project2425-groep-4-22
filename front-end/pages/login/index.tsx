@@ -24,11 +24,10 @@ const Login: React.FC = () => {
     <>
       <Head>
         <title>Login</title>
-        
       </Head>
       <Header />
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+        <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mb-6">
           <h2 className="text-2xl font-semibold mb-6 text-center">Login</h2>
           {error && <p className="text-red-500 mb-4">{error}</p>}
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -69,6 +68,30 @@ const Login: React.FC = () => {
               </button>
             </div>
           </form>
+        </div>
+        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
+          <h2 className="text-xl font-semibold mb-4">User Credentials</h2>
+          <table className="table-auto w-full border-collapse border border-gray-300">
+            <thead>
+              <tr>
+                <th className="border border-gray-300 px-4 py-2">Email</th>
+                <th className="border border-gray-300 px-4 py-2">Password</th>
+                <th className="border border-gray-300 px-4 py-2">Role</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border border-gray-300 px-4 py-2">user@example.com</td>
+                <td className="border border-gray-300 px-4 py-2">user</td>
+                <td className="border border-gray-300 px-4 py-2">user</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-300 px-4 py-2">admin@example.com</td>
+                <td className="border border-gray-300 px-4 py-2">admin</td>
+                <td className="border border-gray-300 px-4 py-2">admin</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </>
