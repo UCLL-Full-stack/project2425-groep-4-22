@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import expenseCategoryService from '../../service/expenseCategoryService'; // Adjust the import path as needed
 import expenseService from '../../service/expenseService'; // Adjust the import path as needed
-import userService from '../../service/userService'; // Assuming you have a userService to fetch users
-import { Expense, User } from '../../types';
+import { Expense } from '../../types';
 
-const AddExpenseForm: React.FC<{ onClose: () => void; onExpenseAdded: () => void }> = ({
+const EditExpenseForm: React.FC<{ onClose: () => void; onExpenseUpdated: () => void; expenseId: number }> = ({
     onClose,
-    onExpenseAdded,
+    onExpenseUpdated,
+    expenseId,
 }) => {
     const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
-    const [users, setUsers] = useState<User[]>([]);
     const [formData, setFormData] = useState({
         amount: '',
         category: '',
-        date: new Date().toISOString().split('T')[0], // Default to today's date in YYYY-MM-DD format
-        userId: '',
+        date: '',
     });
     const [error, setError] = useState<string | null>(null);
 
-    // Fetch categories and users on component mount
+    // Fetch categories and expense data on component mount
     useEffect(() => {
         const fetchCategories = async () => {
             try {
@@ -29,18 +27,22 @@ const AddExpenseForm: React.FC<{ onClose: () => void; onExpenseAdded: () => void
             }
         };
 
-        const fetchUsers = async () => {
+        const fetchExpense = async () => {
             try {
-                const fetchedUsers = await userService.getAllUsers();
-                setUsers(fetchedUsers); // Assuming users have { userId, firstName, lastName }
+                const expense = await expenseService.getExpenseById(expenseId);
+                setFormData({
+                    amount: expense.amount.toString(),
+                    category: expense.category.toString(), // Ensure category is a string
+                    date: new Date(expense.date).toISOString().split('T')[0], // Convert to YYYY-MM-DD format
+                });
             } catch (err) {
-                setError('Failed to fetch users.');
+                setError('Failed to fetch expense.');
             }
         };
 
         fetchCategories();
-        fetchUsers();
-    }, []);
+        fetchExpense();
+    }, [expenseId]);
 
     // Handle input changes
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -51,32 +53,30 @@ const AddExpenseForm: React.FC<{ onClose: () => void; onExpenseAdded: () => void
     // Handle form submission
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!formData.amount || !formData.category || !formData.date || !formData.userId) {
-            setError('Amount, category, date, and user are required.');
+        if (!formData.amount || !formData.category || !formData.date) {
+            setError('Amount, category, and date are required.');
             return;
         }
 
         try {
-            const payload: Expense = {
-                category: formData.category, // Send category ID
+            const payload = {
+                category: formData.category, // Send category ID as string
                 amount: parseFloat(formData.amount), // Convert amount to a float
                 date: new Date(formData.date).toISOString(), // Convert Date to 'YYYY-MM-DDTHH:mm:ss.sssZ' string format
-                userId: parseInt(formData.userId), // Convert userId to number
-                expenseId: 0,
             };
 
-            await expenseService.addExpense(payload);
-            onExpenseAdded(); // Notify the parent
+            await expenseService.updateExpense(expenseId, payload);
+            onExpenseUpdated(); // Notify the parent
             onClose(); // Close the popup
         } catch (err) {
-            setError('Failed to save expense. Please try again.');
+            setError('Failed to update expense. Please try again.');
         }
     };
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white rounded-lg shadow-lg w-96 p-6">
-                <h2 className="text-xl font-semibold mb-4">Add Expense</h2>
+                <h2 className="text-xl font-semibold mb-4">Edit Expense</h2>
                 {error && <p className="text-red-500 mb-4">{error}</p>}
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
@@ -109,7 +109,7 @@ const AddExpenseForm: React.FC<{ onClose: () => void; onExpenseAdded: () => void
                                 Select a category
                             </option>
                             {categories.map((category) => (
-                                <option key={category.id} value={category.id}>
+                                <option key={category.id} value={category.id.toString()}>
                                     {category.name}
                                 </option>
                             ))}
@@ -128,28 +128,6 @@ const AddExpenseForm: React.FC<{ onClose: () => void; onExpenseAdded: () => void
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                             required
                         />
-                    </div>
-                    <div>
-                        <label htmlFor="userId" className="block text-sm font-medium text-gray-700">
-                            User
-                        </label>
-                        <select
-                            id="userId"
-                            name="userId"
-                            value={formData.userId}
-                            onChange={handleInputChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            required
-                        >
-                            <option value="" disabled>
-                                Select a user
-                            </option>
-                            {users.map((user) => (
-                                <option key={user.userId} value={user.userId}>
-                                    {user.firstName} {user.lastName}
-                                </option>
-                            ))}
-                        </select>
                     </div>
                     <div className="flex justify-end space-x-4">
                         <button
@@ -172,4 +150,4 @@ const AddExpenseForm: React.FC<{ onClose: () => void; onExpenseAdded: () => void
     );
 };
 
-export default AddExpenseForm;
+export default EditExpenseForm;

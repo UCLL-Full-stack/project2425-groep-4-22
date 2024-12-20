@@ -9,14 +9,31 @@ import { incomeRouter } from './controller/income.routes';
 import { expenseRouter } from './controller/expense.routes';
 import { incomecategorieRouter } from './controller/incomecategory.routes';
 import { expenseCategoryRouter } from './controller/expensecategory.routes';
+import { expressjwt } from 'express-jwt';
+import { unless } from 'express-unless';
 
 dotenv.config();
 
 const app = express();
 const port = process.env.APP_PORT || 3000;
 
-app.use(cors());
+
+
+app.use(
+    cors({
+        origin: 'http://localhost:8080', // Adjust based on your frontend's origin
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        credentials: true,
+    })
+);
 app.use(bodyParser.json());
+
+app.use(expressjwt({
+    secret: process.env.JWT_SECRET || (() => { throw new Error('JWT_SECRET is not defined'); })(),
+    algorithms: ['HS256']
+}).unless({ path: ['/api-docs', /^\/api-docs\/.*/, '/users/login'] })
+)
+
 
 app.use('/users', userRouter);
 app.use('/incomes', incomeRouter);

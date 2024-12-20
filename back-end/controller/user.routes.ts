@@ -175,3 +175,46 @@ userRouter.post('/add', async (req: Request, res: Response, next: NextFunction) 
         next(error);
     }
 });
+
+/**
+ * @swagger
+ * /users/login:
+ *   post:
+ *     summary: Authenticate a user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UserInput'
+ *     responses:
+ *       200:
+ *         description: User was successfully authenticated
+ *       500:
+ *         description: Internal server error
+ */
+
+userRouter.post('/login', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userInput: UserInput = req.body; // Ensure userInput contains email and password
+        const { email, password } = userInput; // Destructure email and password
+        const authenticationResponse = await userService.authenticate(email, password); // Pass as two arguments
+        res.status(200).json(authenticationResponse);
+    } catch (error) {
+        next(error);
+    }
+});
+
+
+userRouter.get('/email/:email', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const email = req.params.email;
+        const user = await userService.getUserByEmail(email);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        next(error);
+    }
+});

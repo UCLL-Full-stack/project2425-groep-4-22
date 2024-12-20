@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import expenseCategoryService from '../../service/expenseCategoryService'; // Adjust the import path as needed
-import expenseService from '../../service/expenseService'; // Adjust the import path as needed
+import incomeCategoryService from '../../service/incomeCategoryService'; // Adjust the import path as needed
+import incomeService from '../../service/incomeService'; // Adjust the import path as needed
 import userService from '../../service/userService'; // Assuming you have a userService to fetch users
-import { Expense, User } from '../../types';
+import { Income, User } from '../../types';
 
-const AddExpenseForm: React.FC<{ onClose: () => void; onExpenseAdded: () => void }> = ({
+const AddIncomeForm: React.FC<{ onClose: () => void; onIncomeAdded: () => void }> = ({
     onClose,
-    onExpenseAdded,
+    onIncomeAdded,
 }) => {
     const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
     const [users, setUsers] = useState<User[]>([]);
@@ -22,10 +22,10 @@ const AddExpenseForm: React.FC<{ onClose: () => void; onExpenseAdded: () => void
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const fetchedCategories = await expenseCategoryService.getAllExpenseCategories();
+                const fetchedCategories = await incomeCategoryService.getAllIncomeCategories();
                 setCategories(fetchedCategories); // Assuming categories have { id, name }
             } catch (err) {
-                setError('Failed to fetch expense categories.');
+                setError('Failed to fetch income categories.');
             }
         };
 
@@ -57,26 +57,26 @@ const AddExpenseForm: React.FC<{ onClose: () => void; onExpenseAdded: () => void
         }
 
         try {
-            const payload: Expense = {
+            const payload: Income = {
                 category: formData.category, // Send category ID
                 amount: parseFloat(formData.amount), // Convert amount to a float
                 date: new Date(formData.date).toISOString(), // Convert Date to 'YYYY-MM-DDTHH:mm:ss.sssZ' string format
                 userId: parseInt(formData.userId), // Convert userId to number
-                expenseId: 0,
+                incomeId: 0,
             };
 
-            await expenseService.addExpense(payload);
-            onExpenseAdded(); // Notify the parent
+            await incomeService.addIncome(payload);
+            onIncomeAdded(); // Notify the parent
             onClose(); // Close the popup
         } catch (err) {
-            setError('Failed to save expense. Please try again.');
+            setError('Failed to save income. Please try again.');
         }
     };
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white rounded-lg shadow-lg w-96 p-6">
-                <h2 className="text-xl font-semibold mb-4">Add Expense</h2>
+                <h2 className="text-xl font-semibold mb-4">Add Income</h2>
                 {error && <p className="text-red-500 mb-4">{error}</p>}
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
@@ -172,4 +172,4 @@ const AddExpenseForm: React.FC<{ onClose: () => void; onExpenseAdded: () => void
     );
 };
 
-export default AddExpenseForm;
+export default AddIncomeForm;

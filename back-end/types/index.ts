@@ -29,12 +29,23 @@ export type ExpenseCategory =
 // Input types for creating new instances
 
 export type UserInput = {
+
     firstName: string;
     lastName: string;
     email: string;
     password: string;
     role: number;
 };
+
+export interface AuthenticationResponse {
+    token: string;
+    firstname: string;
+    lastname: string;
+    role: string;
+    userid: any;
+    email: string; // This is required
+}
+
 
 export type IncomeInput = {
     category: IncomeCategory;

@@ -9,14 +9,15 @@ import {
 } from '@prisma/client';
 
 export class User {
-    private userId?: number;
-    private firstName: string;
-    private lastName: string;
-    private email: string;
-    private password: string;
-    private role: number;
-    private incomes: Income[];
-    private expenses: Expense[];
+    public userId?: number;
+    public firstName: string;
+    public lastName: string;
+    public email: string;
+    public password: string;
+    public role: number;
+    public incomes: Income[];
+    public expenses: Expense[];
+
 
     constructor(user: {
         userId?: number;
@@ -121,13 +122,14 @@ export class User {
         incomes: (IncomePrisma & { category?: { id: number; name: string } | null })[];
         expenses: (ExpensePrisma & { category?: { id: number; name: string } | null })[];
     }) {
+        // Create a new User instance
         const user = new User({
             userId: user_id,
             firstName: firstname,
             lastName: lastname,
             email,
             password,
-            role: roleId ?? 2,
+            role: roleId ?? 2, // Default role to 2 if not provided
         });
 
         // Map expenses safely
@@ -152,6 +154,7 @@ export class User {
 
         return user;
     }
+
 
 
     // Equals method to compare users

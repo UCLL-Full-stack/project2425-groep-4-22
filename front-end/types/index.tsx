@@ -1,32 +1,45 @@
-export type Role = 'admin' | 'user';
-
-export type IncomeCategory = 'Salary' | 'Investment' | 'Other';
-
-export type ExpenseCategory = 'Groceries' | 'Rent' | 'Utilities' | 'Other';
-
 export interface User {
-  userId?: number;
+  userId: number;
   firstName: string;
   lastName: string;
   email: string;
   password: string;
-  role: Role;
+  role?: Role;
+  roleId?: number;
   incomes?: Income[];
   expenses?: Expense[];
 }
 
+export interface Role {
+  id: number;
+  name: string;
+  users?: User[];
+}
+
 export interface Income {
-  incomeId?: number;
-  category: IncomeCategory;
+  incomeId: number;
+  category: string;
   amount: number;
-  userId: number;
-  date: Date;
+  date:string;
+  userId?: number;
 }
 
 export interface Expense {
-  expenseId?: number;
-  category: ExpenseCategory;
+  expenseId: any;
+  category: string;
   amount: number;
-  userId: number;
-  date: Date;
+  date: string;
+  userId?: number;
+}
+
+export interface IncomeCategory {
+  id: number;
+  name: string;
+  incomes?: Income[];
+}
+
+export interface ExpenseCategory {
+  id: number;
+  name: string;
+  expenses?: Expense[];
 }

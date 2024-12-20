@@ -7,15 +7,14 @@ export class Income {
     private amount: number;
     private date: Date;
 
+
     constructor(income: {
         incomeId?: number;
         category: string | null;
         amount: number;
         date: Date;
     }) {
-        if (!income.category) {
-            throw new Error('Income category is required.');
-        }
+
 
         if (income.amount <= 0) {
             throw new Error('Income amount must be a positive number.');
@@ -54,14 +53,15 @@ export class Income {
         category,
         amount,
         date,
-    }: IncomePrisma & { category: IncomeCategoryPrisma }) {
+    }: IncomePrisma & { category?: IncomeCategoryPrisma | null }) {
         return new Income({
             incomeId: income_id,
-            category: category.name as IncomeCategory,
+            category: category?.name as IncomeCategory || "", // Use optional chaining and fallback to null
             amount,
             date,
         });
     }
+
 
     // Equals method to compare incomes
     equals(income: Income): boolean {

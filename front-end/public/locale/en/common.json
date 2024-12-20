@@ -1,0 +1,31 @@
+{
+  "menu": {
+    "users": "Users",
+    "expenses": "Expenses",
+    "incomes": "Incomes",
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "buttons": {
+    "add_expense": "Add Expense",
+    "add_income": "Add Income"
+  },
+  "table_headers": {
+    "select": "Select",
+    "category": "Category",
+    "amount": "Amount",
+    "date": "Date",
+    "user_id": "User ID",
+    "firstname": "Firstname",
+    "lastname": "Lastname"
+  },
+  "user_details": {
+    "id": "ID:",
+    "firstname": "Firstname:",
+    "lastname": "Lastname:",
+    "email": "E-mail:",
+    "role": "Role:",
+    "incomes": "Incomes",
+    "expenses": "Expenses"
+  }
+}

@@ -1,10 +1,26 @@
-import { Expense } from '../types';
+import { ExpenseCategory } from '../types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-const getAllExpenses = async (): Promise<Expense[]> => {
+const getAllExpenseCategories = async (): Promise<{ id: number; name: string }[]> => {
     const token = sessionStorage.getItem('token');
-    const response = await fetch(`${API_URL}/expenses`, {
+    const response = await fetch(`${API_URL}/expense-categories`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch expense categories');
+    }
+    return response.json();
+};
+
+const getExpenseCategoryById = async (id: number): Promise<ExpenseCategory> => {
+    const token = sessionStorage.getItem('token');
+    const response = await fetch(`${API_URL}/expense-categories/${id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -12,61 +28,46 @@ const getAllExpenses = async (): Promise<Expense[]> => {
         },
     });
     if (!response.ok) {
-        throw new Error('Failed to fetch expenses');
+        throw new Error('Failed to fetch expense category');
     }
     return response.json();
 };
 
-const getExpenseById = async (id: number): Promise<Expense> => {
+const addExpenseCategory = async (name: string): Promise<ExpenseCategory> => {
     const token = sessionStorage.getItem('token');
-    const response = await fetch(`${API_URL}/expenses/${id}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-        },
-    });
-    if (!response.ok) {
-        throw new Error('Failed to fetch expense');
-    }
-    return response.json();
-};
-
-const addExpense = async (expenseData: Expense): Promise<Expense> => {
-    const token = sessionStorage.getItem('token');
-    const response = await fetch(`${API_URL}/expenses/add`, {
+    const response = await fetch(`${API_URL}/expense-categories/add`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(expenseData),
+        body: JSON.stringify({ name }),
     });
     if (!response.ok) {
-        throw new Error('Failed to add expense');
+        throw new Error('Failed to add expense category');
     }
     return response.json();
 };
 
-const updateExpense = async (id: number, expenseData: Partial<Expense>): Promise<Expense> => {
+const updateExpenseCategory = async (id: number, name: string): Promise<ExpenseCategory> => {
     const token = sessionStorage.getItem('token');
-    const response = await fetch(`${API_URL}/expenses/update/${id}`, {
+    const response = await fetch(`${API_URL}/expense-categories/${id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(expenseData),
+        body: JSON.stringify({ name }),
     });
     if (!response.ok) {
-        throw new Error('Failed to update expense');
+        throw new Error('Failed to update expense category');
     }
     return response.json();
 };
 
-const deleteExpense = async (id: number): Promise<void> => {
+const deleteExpenseCategory = async (id: number): Promise<void> => {
     const token = sessionStorage.getItem('token');
-    const response = await fetch(`${API_URL}/expenses/delete/${id}`, {
+    const response = await fetch(`${API_URL}/expense-categories/${id}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -74,8 +75,8 @@ const deleteExpense = async (id: number): Promise<void> => {
         },
     });
     if (!response.ok) {
-        throw new Error('Failed to delete expense');
+        throw new Error('Failed to delete expense category');
     }
 };
 
-export default { getAllExpenses, getExpenseById, addExpense, updateExpense, deleteExpense };
+export default { getAllExpenseCategories, getExpenseCategoryById, addExpenseCategory, updateExpenseCategory, deleteExpenseCategory };

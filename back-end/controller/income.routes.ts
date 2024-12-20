@@ -2,6 +2,8 @@ import express, { Request, Response, NextFunction } from 'express';
 import incomeRepository from '../repository/income.db';
 import userRepository from '../repository/user.db';
 import { IncomeInput } from '../types/index';
+import userService from '../service/user.service';
+import incomeService from '../service/income.service';
 
 export const incomeRouter = express.Router();
 
@@ -24,7 +26,7 @@ export const incomeRouter = express.Router();
  */
 incomeRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const incomes = await incomeRepository.getAllIncomes();
+        const incomes = await incomeService.getAllIncomes();
         res.status(200).json(incomes);
     } catch (error) {
         next(error);
@@ -58,7 +60,7 @@ incomeRouter.get('/', async (req: Request, res: Response, next: NextFunction) =>
 incomeRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const incomeId = parseInt(req.params.id, 10);
-        const income = await incomeRepository.getIncomeById(incomeId);
+        const income = await incomeService.getIncomesByUserId(incomeId);
         if (income) {
             res.status(200).json(income);
         } else {
@@ -92,7 +94,7 @@ incomeRouter.get('/:id', async (req: Request, res: Response, next: NextFunction)
  *       500:
  *         description: Internal server error
  */
-incomeRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
+incomeRouter.post('/add', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const incomeData: IncomeInput = req.body;
 
@@ -101,7 +103,7 @@ incomeRouter.post('/', async (req: Request, res: Response, next: NextFunction) =
             return res.status(400).json({ message: `User with id ${incomeData.userId} does not exist.` });
         }
 
-        const newIncome = await incomeRepository.addIncome({
+        const newIncome = await incomeService.addIncome({
             ...incomeData,
             userId: incomeData.userId,
         });
@@ -142,7 +144,7 @@ incomeRouter.put('/update/:id', async (req: Request, res: Response, next: NextFu
         const incomeId = parseInt(req.params.id, 10);
         const updateData: Partial<IncomeInput> = req.body;
 
-        const updatedIncome = await incomeRepository.updateIncome(incomeId, updateData);
+        const updatedIncome = await incomeService.updateIncome(incomeId, updateData);
         res.status(200).json(updatedIncome);
     } catch (error) {
         next(error);
@@ -173,8 +175,48 @@ incomeRouter.delete('/delete/:id', async (req: Request, res: Response, next: Nex
     try {
         const incomeId = parseInt(req.params.id, 10);
 
-        await incomeRepository.deleteIncome(incomeId);
+        await incomeService.deleteIncome(incomeId);
         res.status(204).send();
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**
+ * @swagger
+ * /incomes/user/{userId}:
+ *   get:
+ *     summary: Get incomes by user ID
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Numeric ID of the user to get incomes for
+ *     responses:
+ *       200:
+ *         description: Incomes were successfully retrieved
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Income'
+ *       404:
+ *         description: Incomes not found
+ *       500:
+ *         description: Internal server error
+ */
+incomeRouter.get('/user/:userId', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userId = parseInt(req.params.userId, 10);
+        const incomes = await incomeService.getIncomesByUserId(userId);
+        if (incomes.length > 0) {
+            res.status(200).json(incomes);
+        } else {
+            res.status(404).json({ message: 'Incomes not found' });
+        }
     } catch (error) {
         next(error);
     }

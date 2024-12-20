@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "i18next": "^24.2.0",
+    "next-i18next": "^15.4.1",
+    "react-i18next": "^15.2.0"
+  }
+}

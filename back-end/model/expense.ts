@@ -13,9 +13,7 @@ export class Expense {
         amount: number;
         date: Date;
     }) {
-        if (!expense.category) {
-            throw new Error('Expense category is required.');
-        }
+
 
         if (expense.amount <= 0) {
             throw new Error('Expense amount must be a positive number.');
@@ -61,7 +59,7 @@ export class Expense {
 
         return new Expense({
             expenseId: expense_id,
-            category: category.name as ExpenseCategory,
+            category: category.name as ExpenseCategory || "",
             amount,
             date,
         });

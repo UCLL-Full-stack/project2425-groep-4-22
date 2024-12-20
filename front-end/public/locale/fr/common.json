@@ -1,0 +1,31 @@
+{
+  "menu": {
+    "users": "Utilisateurs",
+    "expenses": "Dépenses",
+    "incomes": "Revenus",
+    "login": "Connexion",
+    "logout": "Déconnexion"
+  },
+  "buttons": {
+    "add_expense": "Ajouter une dépense",
+    "add_income": "Ajouter un revenu"
+  },
+  "table_headers": {
+    "select": "Sélectionner",
+    "category": "Catégorie",
+    "amount": "Montant",
+    "date": "Date",
+    "user_id": "ID utilisateur",
+    "firstname": "Prénom",
+    "lastname": "Nom"
+  },
+  "user_details": {
+    "id": "ID :",
+    "firstname": "Prénom :",
+    "lastname": "Nom :",
+    "email": "E-mail :",
+    "role": "Rôle :",
+    "incomes": "Revenus",
+    "expenses": "Dépenses"
+  }
+}

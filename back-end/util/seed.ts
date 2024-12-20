@@ -20,20 +20,7 @@ async function main() {
         },
     });
 
-    // Seed Users
-    const user1 = await prisma.user.upsert({
-        where: { email: "johndoe@example.com" },
-        update: {},
-        create: {
-            firstname: "John",
-            lastname: "Doe",
-            email: "johndoe@example.com",
-            password: "password123", // Consider hashing passwords in production
-            role: {
-                connect: { id: adminRole.id },
-            },
-        },
-    });
+
 
     const user2 = await prisma.user.upsert({
         where: { email: "janedoe@example.com" },
@@ -83,19 +70,7 @@ async function main() {
         },
     });
 
-    // Seed Incomes
-    await prisma.income.create({
-        data: {
-            amount: 5000.0,
-            date: new Date(),
-            user: {
-                connect: { user_id: user1.user_id },
-            },
-            category: {
-                connect: { id: salaryCategory.id },
-            },
-        },
-    });
+
 
     await prisma.income.create({
         data: {
@@ -111,18 +86,7 @@ async function main() {
     });
 
     // Seed Expenses
-    await prisma.expense.create({
-        data: {
-            amount: 300.0,
-            date: new Date(),
-            user: {
-                connect: { user_id: user1.user_id },
-            },
-            category: {
-                connect: { id: groceriesCategory.id },
-            },
-        },
-    });
+
 
     await prisma.expense.create({
         data: {

@@ -1,2 +1,9 @@
-fix getExpenseById so it doesnt need string for id
-implement user delete and update
+expense:
+    fix getExpenseById so it doesnt need string for id
+
+categories;
+    change spelling of categorys to categories
+
+eddit form:
+    make dropdown empty 
+    make date format 

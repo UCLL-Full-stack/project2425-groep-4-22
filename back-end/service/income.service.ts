@@ -5,10 +5,14 @@ import { IncomeInput } from '../types/index';
 
 const getAllIncomes = async (): Promise<Income[]> => incomeRepository.getAllIncomes();
 
-const getIncomeById = async (incomeId: number): Promise<Income> => {
-    const income = await incomeRepository.getIncomeById(incomeId);
-    if (!income) throw new Error(`Income with id ${incomeId} does not exist.`);
-    return income;
+const getIncomesByUserId = async (userId: number): Promise<Income[]> => {
+    const user = await userRepository.getUserById({ userId });
+    if (!user) {
+        throw new Error(`User with id ${userId} does not exist.`);
+    }
+
+    const incomes = await incomeRepository.getIncomesByUserId(userId);
+    return incomes;
 };
 
 const addIncome = async (incomeData: IncomeInput): Promise<Income> => {
@@ -37,4 +41,4 @@ const deleteIncome = async (incomeId: number): Promise<void> => {
     await incomeRepository.deleteIncome(incomeId);
 };
 
-export default { getAllIncomes, getIncomeById, addIncome, updateIncome, deleteIncome };
+export default { getAllIncomes, getIncomesByUserId, addIncome, updateIncome, deleteIncome };

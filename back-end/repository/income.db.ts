@@ -23,6 +23,24 @@ const getAllIncomes = async (): Promise<Income[]> => {
     }
 };
 
+const getIncomesByUserId = async (userId: number): Promise<Income[]> => {
+    const incomes = await database.income.findMany({
+        where: {
+            userId, // Filter incomes by userId
+        },
+        include: {
+            category: true, // Include category details if needed
+        },
+    });
+
+    return incomes.map((incomePrisma) => {
+        return Income.from({
+            ...incomePrisma,
+            category: incomePrisma.category as { id: number; name: string }
+        });
+    });
+};
+
 const getIncomeById = async (incomeId: number): Promise<Income | null> => {
     try {
         const incomePrisma = await database.income.findUnique({
@@ -132,5 +150,6 @@ export default {
     getIncomeById,
     addIncome,
     updateIncome,
-    deleteIncome
+    deleteIncome,
+    getIncomesByUserId
 };
