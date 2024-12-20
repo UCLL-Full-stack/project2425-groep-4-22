@@ -1,7 +1,8 @@
 import express, { NextFunction, Request, Response } from 'express';
 import expenseService from '../service/expense.service';
+import { ExpenseCategory } from '@prisma/client';
 import { ExpenseInput } from '../types';
-import { ExpenseCategory } from '../model/expensecategory';
+import userService from '../service/user.service';
 
 
 
@@ -97,7 +98,18 @@ expenseRouter.get('/:id', async (req: Request, res: Response, next: NextFunction
 expenseRouter.post('/add', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const expenseData: ExpenseInput = req.body;
-        const newExpense = await expenseService.addExpense(expenseData);
+
+        const user = await userService.getUserById(expenseData.userId);
+        if (!user) {
+            return res.status(400).json({ message: `User with id ${expenseData.userId} does not exist.` });
+        }
+
+
+        const newExpense = await expenseService.addExpense({
+            ...expenseData,
+            category: typeof expenseData.category === 'string' ? expenseData.category : expenseData.category.name,
+            userId: expenseData.userId,
+        });
         res.status(201).json(newExpense);
     } catch (error) {
         next(error);

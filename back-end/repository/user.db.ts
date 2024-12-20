@@ -35,17 +35,16 @@ const getUserById = async ({ userId }: { userId: number }): Promise<User | null>
             where: { user_id: userId },
             include: {
                 incomes: {
-                    include: { category: true }, // Include income categories
+                    include: { category: true },
                 },
                 expenses: {
-                    include: { category: true }, // Include expense categories
+                    include: { category: true },
                 },
             },
         });
 
         if (!userPrisma) return null;
 
-        // Map the database result to a `User` instance
         return User.from({
             ...userPrisma,
             incomes: userPrisma.incomes || [],
@@ -59,7 +58,7 @@ const getUserById = async ({ userId }: { userId: number }): Promise<User | null>
 
 const addUser = async (userData: UserInput): Promise<User> => {
     try {
-        // Ensure the role exists
+
         const roleExists = await database.role.findUnique({
             where: { id: userData.role },
         });
@@ -68,7 +67,7 @@ const addUser = async (userData: UserInput): Promise<User> => {
             throw new Error(`Role with id ${userData.role} does not exist.`);
         }
 
-        // Create the new user in the database
+
         const newUserPrisma = await database.user.create({
             data: {
                 firstname: userData.firstName,
@@ -83,11 +82,11 @@ const addUser = async (userData: UserInput): Promise<User> => {
             },
         });
 
-        // Map the created user to a `User` instance
+
         return User.from({
             ...newUserPrisma,
-            incomes: [], // Newly created user has no incomes yet
-            expenses: [], // Newly created user has no expenses yet
+            incomes: [],
+            expenses: [],
         });
     } catch (error) {
         console.error('Error adding user:', error);
@@ -101,17 +100,17 @@ const getUserByEmail = async (email: string): Promise<User | null> => {
             where: { email },
             include: {
                 incomes: {
-                    include: { category: true }, // Include income categories
+                    include: { category: true },
                 },
                 expenses: {
-                    include: { category: true }, // Include expense categories
+                    include: { category: true },
                 },
             },
         });
 
         if (!userPrisma) return null;
 
-        // Map the database result to a `User` instance
+
         return User.from({
             ...userPrisma,
             incomes: userPrisma.incomes || [],

@@ -6,13 +6,13 @@ const generateJwtToken = (user: { userId: number; email: string; role: string })
     }
 
     const payload = {
-        userId: user.userId, // Include userId in the token payload
+        userId: user.userId,
         email: user.email,
         role: user.role,
     };
 
     const options = {
-        expiresIn: process.env.JWT_EXPIRES_HOURS, // Expiry time
+        expiresIn: process.env.JWT_EXPIRES_HOURS,
     };
 
     return jwt.sign(payload, process.env.JWT_SECRET, options);

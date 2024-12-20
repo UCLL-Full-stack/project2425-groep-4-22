@@ -1,10 +1,10 @@
-import { ExpenseCategory } from '../types';
+import { IncomeCategory } from '../types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-const getAllExpenseCategories = async (): Promise<{ id: number; name: string }[]> => {
+const getAllIncomeCategories = async (): Promise<{ id: number; name: string }[]> => {
     const token = sessionStorage.getItem('token');
-    const response = await fetch(`${API_URL}/expense-categories`, {
+    const response = await fetch(`${API_URL}/income-categorys`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -13,14 +13,14 @@ const getAllExpenseCategories = async (): Promise<{ id: number; name: string }[]
     });
 
     if (!response.ok) {
-        throw new Error('Failed to fetch expense categories');
+        throw new Error('Failed to fetch income categories');
     }
     return response.json();
 };
 
-const getExpenseCategoryById = async (id: number): Promise<ExpenseCategory> => {
+const getIncomeCategoryById = async (id: number): Promise<IncomeCategory> => {
     const token = sessionStorage.getItem('token');
-    const response = await fetch(`${API_URL}/expense-categories/${id}`, {
+    const response = await fetch(`${API_URL}/income-categorys/${id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -28,14 +28,14 @@ const getExpenseCategoryById = async (id: number): Promise<ExpenseCategory> => {
         },
     });
     if (!response.ok) {
-        throw new Error('Failed to fetch expense category');
+        throw new Error('Failed to fetch income category');
     }
     return response.json();
 };
 
-const addExpenseCategory = async (name: string): Promise<ExpenseCategory> => {
+const addIncomeCategory = async (name: string): Promise<IncomeCategory> => {
     const token = sessionStorage.getItem('token');
-    const response = await fetch(`${API_URL}/expense-categories/add`, {
+    const response = await fetch(`${API_URL}/income-categorys/add`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -44,14 +44,14 @@ const addExpenseCategory = async (name: string): Promise<ExpenseCategory> => {
         body: JSON.stringify({ name }),
     });
     if (!response.ok) {
-        throw new Error('Failed to add expense category');
+        throw new Error('Failed to add income category');
     }
     return response.json();
 };
 
-const updateExpenseCategory = async (id: number, name: string): Promise<ExpenseCategory> => {
+const updateIncomeCategory = async (id: number, name: string): Promise<IncomeCategory> => {
     const token = sessionStorage.getItem('token');
-    const response = await fetch(`${API_URL}/expense-categories/${id}`, {
+    const response = await fetch(`${API_URL}/income-categorys/${id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -60,14 +60,14 @@ const updateExpenseCategory = async (id: number, name: string): Promise<ExpenseC
         body: JSON.stringify({ name }),
     });
     if (!response.ok) {
-        throw new Error('Failed to update expense category');
+        throw new Error('Failed to update income category');
     }
     return response.json();
 };
 
-const deleteExpenseCategory = async (id: number): Promise<void> => {
+const deleteIncomeCategory = async (id: number): Promise<void> => {
     const token = sessionStorage.getItem('token');
-    const response = await fetch(`${API_URL}/expense-categories/${id}`, {
+    const response = await fetch(`${API_URL}/income-categorys/${id}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -75,8 +75,14 @@ const deleteExpenseCategory = async (id: number): Promise<void> => {
         },
     });
     if (!response.ok) {
-        throw new Error('Failed to delete expense category');
+        throw new Error('Failed to delete income category');
     }
 };
 
-export default { getAllExpenseCategories, getExpenseCategoryById, addExpenseCategory, updateExpenseCategory, deleteExpenseCategory };
+export default {
+    getAllIncomeCategories,
+    getIncomeCategoryById,
+    addIncomeCategory,
+    updateIncomeCategory,
+    deleteIncomeCategory
+};

@@ -1,32 +1,6 @@
-import { User } from "../model/user";
+import { ExpenseCategory, IncomeCategory } from "@prisma/client";
 
-export type Role = 'admin' | 'member' | 'user';
 
-export type IncomeCategory =
-    'Salary' |
-    'Interest' |
-    'Investment' |
-    'Government payments' |
-    'Gifts' |
-    'Various';
-
-export type ExpenseCategory =
-    'Taxes' |
-    'Utilities' |
-    'Rent' |
-    'Insurance' |
-    'Groceries' |
-    'Restaurants' |
-    'Transport' |
-    'Health' |
-    'Entertainment' |
-    'Subscriptions' |
-    'Clothing' |
-    'Education' |
-    'Presents' |
-    'Various';
-
-// Input types for creating new instances
 
 export type UserInput = {
 
@@ -43,7 +17,7 @@ export interface AuthenticationResponse {
     lastname: string;
     role: string;
     userid: any;
-    email: string; // This is required
+    email: string;
 }
 
 
@@ -55,9 +29,12 @@ export type IncomeInput = {
 };
 
 
+
 export type ExpenseInput = {
-    category: ExpenseCategory | string;
+    userId: number;
+    category: ExpenseCategory
     amount: number;
     date: Date;
-    userId: number;
 };
+
+

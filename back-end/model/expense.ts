@@ -1,4 +1,4 @@
-import { ExpenseCategory } from '../types/index';
+import { ExpenseCategory } from '@prisma/client';
 import { Expense as ExpensePrisma, ExpenseCategory as ExpenseCategoryPrisma } from '@prisma/client';
 
 export class Expense {
@@ -59,7 +59,7 @@ export class Expense {
 
         return new Expense({
             expenseId: expense_id,
-            category: category.name as ExpenseCategory || "",
+            category: category.name || "",
             amount,
             date,
         });
@@ -67,7 +67,7 @@ export class Expense {
 
 
 
-    // Equals method to compare expenses
+
     equals(expense: Expense): boolean {
         return (
             this.category === expense.getCategory() &&

@@ -1,4 +1,4 @@
-import { IncomeCategory } from '../types/index';
+import { IncomeCategory } from '@prisma/client';
 import { Income as IncomePrisma, IncomeCategory as IncomeCategoryPrisma } from '@prisma/client';
 
 export class Income {
@@ -56,14 +56,14 @@ export class Income {
     }: IncomePrisma & { category?: IncomeCategoryPrisma | null }) {
         return new Income({
             incomeId: income_id,
-            category: category?.name as IncomeCategory || "", // Use optional chaining and fallback to null
+            category: category?.name || "",
             amount,
             date,
         });
     }
 
 
-    // Equals method to compare incomes
+
     equals(income: Income): boolean {
         return (
             this.category === income.getCategory() &&

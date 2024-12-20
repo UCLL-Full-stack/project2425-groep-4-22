@@ -1,6 +1,6 @@
 import { Income } from '../model/income';
 import database from './database';
-import { IncomeCategory } from '../types/index';
+import { IncomeCategory } from '@prisma/client';
 import userRepository from './user.db';
 
 const getAllIncomes = async (): Promise<Income[]> => {
@@ -26,10 +26,10 @@ const getAllIncomes = async (): Promise<Income[]> => {
 const getIncomesByUserId = async (userId: number): Promise<Income[]> => {
     const incomes = await database.income.findMany({
         where: {
-            userId, // Filter incomes by userId
+            userId,
         },
         include: {
-            category: true, // Include category details if needed
+            category: true,
         },
     });
 

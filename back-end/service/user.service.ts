@@ -31,7 +31,7 @@ const authenticate = async (email: string, password: string): Promise<Authentica
         throw new Error('User not found');
     }
 
-    // Verify password (assuming bcrypt or similar is used)
+
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
         throw new Error('Invalid password');
@@ -39,20 +39,20 @@ const authenticate = async (email: string, password: string): Promise<Authentica
 
     // Generate a token
     const token = generateJwtToken({
-        userId: user.userId!, // Assuming this is your user's unique ID
+        userId: user.userId!,
         email: user.email,
         role: roleMap[user.role],
 
     });
 
-    // Return the full response with all required fields
+
     return {
         token,
         firstname: user.firstName,
         lastname: user.lastName,
         role: roleMap[user.role],
         userid: user.userId,
-        email: user.email, // Include email here
+        email: user.email,
     };
 };
 
@@ -60,16 +60,16 @@ const authenticate = async (email: string, password: string): Promise<Authentica
 const addUser = async (userInput: UserInput): Promise<User> => {
     const { firstName, lastName, email, password, role } = userInput;
 
-    // Check if a user with the same email already exists
+
     const existingUser = await userRepository.getUserByEmail(email);
     if (existingUser) {
         throw new Error(`User with email ${email} is already registered.`);
     }
 
-    // Hash the user's password securely
+
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // Map to the required DTO structure as needed by repository
+
     const newUserData = {
 
         firstName,
@@ -91,8 +91,8 @@ const addUser = async (userInput: UserInput): Promise<User> => {
         email: savedUserData.email,
         password: savedUserData.password,
         roleId: savedUserData.role,
-        incomes: [], // Newly created user has no incomes yet
-        expenses: [], // Newly created user has no expenses yet
+        incomes: [],
+        expenses: [],
     });
 
     return user;
@@ -106,7 +106,7 @@ const getUserByEmail = async (email: string): Promise<User | null> => {
 
 const logout = () => {
     sessionStorage.removeItem('token');
-    window.location.href = '/login'; // Redirect to the login page or home page
+    window.location.href = '/login';
 };
 
 

@@ -30,24 +30,23 @@ const getExpenseById = async ({ expenseId }: { expenseId: number }): Promise<Exp
 };
 
 const addExpense = async (expenseInput: {
-    category: ExpenseCategory | string; // Accepts both ExpenseCategory object and string ID
+    category: ExpenseCategory | string;
     amount: number;
     date: Date;
     userId: number;
 }): Promise<Expense> => {
     try {
-        // Validate and fetch the user
+
         const user = await userRepository.getUserById({ userId: expenseInput.userId });
         if (!user) {
             throw new Error(`User with id ${expenseInput.userId} not found`);
         }
 
-        // Determine the categoryId
         let categoryId: number;
         if (typeof expenseInput.category === 'string') {
-            categoryId = parseInt(expenseInput.category, 10); // Convert string to number
+            categoryId = parseInt(expenseInput.category, 10);
         } else if (typeof expenseInput.category === 'object' && 'getId' in expenseInput.category) {
-            categoryId = (expenseInput.category as ExpenseCategory).getId(); // Use the public method to get the `id`
+            categoryId = (expenseInput.category as ExpenseCategory).getId();
         } else {
             throw new Error('Invalid category provided.');
         }
@@ -56,7 +55,7 @@ const addExpense = async (expenseInput: {
             throw new Error('Invalid category ID provided.');
         }
 
-        // Add the new expense to the database
+
         const newExpensePrisma = await database.expense.create({
             data: {
                 categoryId,
@@ -74,7 +73,7 @@ const addExpense = async (expenseInput: {
             throw new Error('Category not found for the new expense.');
         }
 
-        // Map Prisma response to the Expense object
+
         const newExpense = Expense.from({
             ...newExpensePrisma,
             category: newExpensePrisma.category as { id: number; name: string },
@@ -102,8 +101,8 @@ const updateExpense = async (expenseId: number, updateData: Partial<ExpenseInput
         if (updateData.category) {
             dataToUpdate.categoryId =
                 typeof updateData.category === 'string'
-                    ? parseInt(updateData.category, 10) // Convert string ID to number
-                    : (updateData.category as ExpenseCategory).getId(); // Use the ID if it's an ExpenseCategory object.
+                    ? parseInt(updateData.category, 10)
+                    : (updateData.category as unknown as ExpenseCategory).getId();
             if (isNaN(dataToUpdate.categoryId)) {
                 throw new Error('Invalid category ID provided.');
             }

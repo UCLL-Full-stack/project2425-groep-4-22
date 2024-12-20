@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import incomeCategoryService from '../../service/incomeCategoryService'; // Adjust the import path as needed
 import incomeService from '../../service/incomeService'; // Adjust the import path as needed
-import userService from '../../service/userService'; // Assuming you have a userService to fetch users
-import { Income, User } from '../../types';
+import { Income } from '../../types';
+import { getUserIdFromToken } from 'src/utils';
 
 const AddIncomeForm: React.FC<{ onClose: () => void; onIncomeAdded: () => void }> = ({
     onClose,
     onIncomeAdded,
 }) => {
     const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
-    const [users, setUsers] = useState<User[]>([]);
     const [formData, setFormData] = useState({
         amount: '',
         category: '',
         date: new Date().toISOString().split('T')[0], // Default to today's date in YYYY-MM-DD format
-        userId: '',
     });
     const [error, setError] = useState<string | null>(null);
 
-    // Fetch categories and users on component mount
+    // Fetch categories on component mount
     useEffect(() => {
         const fetchCategories = async () => {
             try {
@@ -29,18 +27,10 @@ const AddIncomeForm: React.FC<{ onClose: () => void; onIncomeAdded: () => void }
             }
         };
 
-        const fetchUsers = async () => {
-            try {
-                const fetchedUsers = await userService.getAllUsers();
-                setUsers(fetchedUsers); // Assuming users have { userId, firstName, lastName }
-            } catch (err) {
-                setError('Failed to fetch users.');
-            }
-        };
-
         fetchCategories();
-        fetchUsers();
     }, []);
+
+    const userId = getUserIdFromToken();
 
     // Handle input changes
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -51,7 +41,7 @@ const AddIncomeForm: React.FC<{ onClose: () => void; onIncomeAdded: () => void }
     // Handle form submission
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!formData.amount || !formData.category || !formData.date || !formData.userId) {
+        if (!formData.amount || !formData.category || !formData.date || !userId) {
             setError('Amount, category, date, and user are required.');
             return;
         }
@@ -61,7 +51,7 @@ const AddIncomeForm: React.FC<{ onClose: () => void; onIncomeAdded: () => void }
                 category: formData.category, // Send category ID
                 amount: parseFloat(formData.amount), // Convert amount to a float
                 date: new Date(formData.date).toISOString(), // Convert Date to 'YYYY-MM-DDTHH:mm:ss.sssZ' string format
-                userId: parseInt(formData.userId), // Convert userId to number
+                userId: userId, // Use the extracted user ID
                 incomeId: 0,
             };
 
@@ -128,28 +118,6 @@ const AddIncomeForm: React.FC<{ onClose: () => void; onIncomeAdded: () => void }
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                             required
                         />
-                    </div>
-                    <div>
-                        <label htmlFor="userId" className="block text-sm font-medium text-gray-700">
-                            User
-                        </label>
-                        <select
-                            id="userId"
-                            name="userId"
-                            value={formData.userId}
-                            onChange={handleInputChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            required
-                        >
-                            <option value="" disabled>
-                                Select a user
-                            </option>
-                            {users.map((user) => (
-                                <option key={user.userId} value={user.userId}>
-                                    {user.firstName} {user.lastName}
-                                </option>
-                            ))}
-                        </select>
                     </div>
                     <div className="flex justify-end space-x-4">
                         <button

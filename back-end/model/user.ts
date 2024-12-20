@@ -65,7 +65,7 @@ export class User {
         this.expenses = [];
     }
 
-    // Getters
+
     getUserId(): number | undefined {
         return this.userId;
     }
@@ -98,17 +98,17 @@ export class User {
         return this.expenses;
     }
 
-    // Add income
+
     addIncome(income: Income): void {
         this.incomes.push(income);
     }
 
-    // Add expense
+
     addExpense(expense: Expense): void {
         this.expenses.push(expense);
     }
 
-    // Mappers
+
     static from({
         user_id,
         firstname,
@@ -122,31 +122,31 @@ export class User {
         incomes: (IncomePrisma & { category?: { id: number; name: string } | null })[];
         expenses: (ExpensePrisma & { category?: { id: number; name: string } | null })[];
     }) {
-        // Create a new User instance
+
         const user = new User({
             userId: user_id,
             firstName: firstname,
             lastName: lastname,
             email,
             password,
-            role: roleId ?? 2, // Default role to 2 if not provided
+            role: roleId ?? 2,
         });
 
-        // Map expenses safely
+
         user.expenses = expenses.map((expense) =>
             new Expense({
                 expenseId: expense.expense_id,
-                category: expense.category?.name || null, // Handle null safely
+                category: expense.category?.name || null,
                 amount: expense.amount,
                 date: new Date(expense.date),
             })
         );
 
-        // Map incomes safely
+
         user.incomes = incomes.map((income) =>
             new Income({
                 incomeId: income.income_id,
-                category: income.category?.name || null, // Handle null safely
+                category: income.category?.name || null,
                 amount: income.amount,
                 date: new Date(income.date),
             })
@@ -157,7 +157,7 @@ export class User {
 
 
 
-    // Equals method to compare users
+
     equals(user: User): boolean {
         return (
             this.email === user.getEmail() &&
@@ -166,7 +166,7 @@ export class User {
         );
     }
 
-    // Helper method to validate email format
+
     private isValidEmail(email: string): boolean {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);

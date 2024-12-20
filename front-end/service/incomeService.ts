@@ -52,7 +52,7 @@ const getIncomeById = async (id: number): Promise<Income> => {
 
 const addIncome = async (incomeData: Income): Promise<Income> => {
     const token = sessionStorage.getItem('token');
-    const response = await fetch(`${API_URL}/incomes`, {
+    const response = await fetch(`${API_URL}/incomes/add`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

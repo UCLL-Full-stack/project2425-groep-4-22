@@ -1,6 +1,6 @@
 import { Expense } from '../model/expense';
 import database from './database';
-import { ExpenseCategory } from '../types';
+import { ExpenseCategory } from '@prisma/client';
 import userRepository from './user.db';
 
 const getAllExpenses = async (): Promise<Expense[]> => {

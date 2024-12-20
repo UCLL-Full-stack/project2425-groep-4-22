@@ -13,7 +13,7 @@ export class ExpenseCategory {
         this.name = name;
     }
 
-    // Getters
+
     getId(): number {
         return this.id;
     }
@@ -22,7 +22,7 @@ export class ExpenseCategory {
         return this.name;
     }
 
-    // Mappers
+
     static from(prismaCategory: ExpenseCategoryPrisma): ExpenseCategory {
         return new ExpenseCategory({
             id: prismaCategory.id,

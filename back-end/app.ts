@@ -31,7 +31,7 @@ app.use(bodyParser.json());
 app.use(expressjwt({
     secret: process.env.JWT_SECRET || (() => { throw new Error('JWT_SECRET is not defined'); })(),
     algorithms: ['HS256']
-}).unless({ path: ['/api-docs', /^\/api-docs\/.*/, '/users/login'] })
+}).unless({ path: ['/api-docs', /^\/api-docs\/.*/, '/users/login', '/users/add'] })
 )
 
 
